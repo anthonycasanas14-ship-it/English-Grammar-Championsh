@@ -1,0 +1,3449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>English Grammar Championship</title>
+  <style>
+    :root {
+      --bg-0: #03060f;
+      --bg-1: #071124;
+      --bg-2: #0b1730;
+      --panel: rgba(12, 20, 47, 0.64);
+      --panel-strong: rgba(10, 16, 37, 0.84);
+      --line: rgba(125, 160, 255, 0.18);
+      --line-strong: rgba(255, 255, 255, 0.18);
+      --text: #f4f7ff;
+      --muted: #98aad9;
+      --cyan: #29f0ff;
+      --blue: #4e78ff;
+      --pink: #ff43b7;
+      --gold: #ffcf66;
+      --orange: #ff9652;
+      --green: #54ffaf;
+      --red: #ff5d7f;
+      --shadow: 0 28px 70px rgba(0, 0, 0, 0.42);
+      --shadow-soft: 0 10px 32px rgba(0, 0, 0, 0.25);
+      --radius-xl: 30px;
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --radius-sm: 14px;
+      --rgb-border: linear-gradient(135deg, rgba(41, 240, 255, 0.95), rgba(78, 120, 255, 0.85), rgba(255, 67, 183, 0.95), rgba(255, 150, 82, 0.9));
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      font-family: "Segoe UI", "Trebuchet MS", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 15% 15%, rgba(255, 67, 183, 0.18), transparent 26%),
+        radial-gradient(circle at 85% 20%, rgba(41, 240, 255, 0.12), transparent 22%),
+        radial-gradient(circle at 50% 100%, rgba(78, 120, 255, 0.18), transparent 28%),
+        linear-gradient(180deg, var(--bg-0) 0%, #050a17 28%, var(--bg-1) 58%, var(--bg-0) 100%);
+      overflow-x: hidden;
+    }
+
+    body.reduced-motion *,
+    body.reduced-motion *::before,
+    body.reduced-motion *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body::before {
+      background:
+        linear-gradient(rgba(255, 255, 255, 0.028) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.028) 1px, transparent 1px);
+      background-size: 44px 44px;
+      mask-image: linear-gradient(180deg, rgba(255, 255, 255, 0.9), transparent 85%);
+    }
+
+    body::after {
+      background:
+        radial-gradient(circle at 20% 20%, rgba(41, 240, 255, 0.08), transparent 18%),
+        radial-gradient(circle at 80% 16%, rgba(255, 67, 183, 0.1), transparent 18%),
+        radial-gradient(circle at 50% 74%, rgba(255, 150, 82, 0.08), transparent 22%);
+      animation: breathe-bg 10s ease-in-out infinite alternate;
+    }
+
+    @keyframes breathe-bg {
+      from {
+        transform: scale(1);
+        opacity: 0.86;
+      }
+      to {
+        transform: scale(1.06);
+        opacity: 1;
+      }
+    }
+
+    .bg-canvas,
+    .celebration-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .bg-canvas {
+      z-index: 0;
+    }
+
+    .celebration-canvas {
+      z-index: 14;
+    }
+
+    .noise-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      background:
+        repeating-linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.02) 0,
+          rgba(255, 255, 255, 0.02) 1px,
+          transparent 2px,
+          transparent 4px
+        );
+      mix-blend-mode: soft-light;
+      opacity: 0.45;
+    }
+
+    .app {
+      position: relative;
+      z-index: 2;
+      min-height: 100vh;
+      padding: 18px;
+    }
+
+    .screen {
+      display: none;
+      width: min(1480px, 100%);
+      min-height: calc(100vh - 36px);
+      margin: 0 auto;
+      position: relative;
+      animation: screen-in 0.7s cubic-bezier(.2, .8, .2, 1);
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    @keyframes screen-in {
+      from {
+        opacity: 0;
+        transform: translateY(16px) scale(0.985);
+        filter: blur(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0);
+      }
+    }
+
+    .glass-panel {
+      position: relative;
+      overflow: hidden;
+      background:
+        linear-gradient(180deg, rgba(13, 22, 52, 0.78), rgba(6, 10, 24, 0.84)),
+        rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+    }
+
+    .glass-panel::before {
+      content: "";
+      position: absolute;
+      inset: -1px;
+      border-radius: inherit;
+      padding: 1px;
+      background: var(--rgb-border);
+      background-size: 240% 240%;
+      animation: rgb-shift 8s linear infinite;
+      -webkit-mask:
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+      opacity: 0.42;
+    }
+
+    .glass-panel::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at top left, rgba(41, 240, 255, 0.12), transparent 24%),
+        radial-gradient(circle at bottom right, rgba(255, 67, 183, 0.1), transparent 24%);
+      pointer-events: none;
+    }
+
+    @keyframes rgb-shift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .floating {
+      animation: float 3.8s ease-in-out infinite alternate;
+    }
+
+    @keyframes float {
+      from { transform: translateY(0); }
+      to { transform: translateY(-8px); }
+    }
+
+    .top-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .brand-tag,
+    .info-pill,
+    .mini-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-size: 0.72rem;
+      font-weight: 800;
+    }
+
+    .brand-tag {
+      color: var(--cyan);
+      border-color: rgba(41, 240, 255, 0.3);
+      box-shadow: 0 0 20px rgba(41, 240, 255, 0.18);
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+      color: var(--text);
+      transition: transform 0.18s ease, filter 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.05);
+    }
+
+    .action-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .action-btn {
+      position: relative;
+      padding: 15px 22px;
+      border-radius: 18px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      box-shadow: var(--shadow-soft);
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .action-btn.primary {
+      background: linear-gradient(135deg, rgba(41, 240, 255, 0.96), rgba(78, 120, 255, 0.92));
+      color: #03111f;
+      box-shadow: 0 16px 40px rgba(41, 240, 255, 0.26);
+    }
+
+    .action-btn.secondary {
+      background: linear-gradient(135deg, rgba(255, 67, 183, 0.16), rgba(255, 150, 82, 0.12));
+    }
+
+    .action-btn.subtle {
+      padding: 12px 16px;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .action-btn::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, transparent 25%, rgba(255, 255, 255, 0.18) 45%, transparent 65%);
+      transform: translateX(-120%);
+      animation: btn-scan 3.2s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    @keyframes btn-scan {
+      0%, 60% { transform: translateX(-120%); }
+      100% { transform: translateX(120%); }
+    }
+
+    .menu-screen {
+      display: grid;
+      place-items: center;
+      padding: 18px 0;
+    }
+
+    .menu-shell {
+      width: min(1220px, 100%);
+      min-height: calc(100vh - 72px);
+      display: grid;
+      grid-template-columns: 1.25fr 0.75fr;
+      gap: 20px;
+      align-items: stretch;
+    }
+
+    .menu-hero {
+      padding: 40px 38px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 100%;
+    }
+
+    .hero-kicker {
+      color: var(--cyan);
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      font-size: 0.8rem;
+      font-weight: 900;
+      margin-bottom: 20px;
+    }
+
+    .menu-title {
+      font-size: clamp(3rem, 8vw, 6.4rem);
+      line-height: 0.9;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      text-shadow:
+        0 0 28px rgba(41, 240, 255, 0.15),
+        0 0 50px rgba(255, 67, 183, 0.08);
+      max-width: 820px;
+    }
+
+    .title-accent {
+      display: block;
+      color: #b8f6ff;
+    }
+
+    .menu-copy {
+      margin-top: 18px;
+      max-width: 700px;
+      color: var(--muted);
+      font-size: 1.05rem;
+      line-height: 1.8;
+    }
+
+    .menu-actions {
+      margin-top: 28px;
+    }
+
+    .menu-strip {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 30px;
+    }
+
+    .menu-stat {
+      padding: 16px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .menu-stat strong {
+      display: block;
+      color: var(--gold);
+      font-size: 1.35rem;
+      letter-spacing: 0.04em;
+      margin-bottom: 8px;
+    }
+
+    .menu-stat span {
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 0.94rem;
+    }
+
+    .menu-side {
+      padding: 26px;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 16px;
+    }
+
+    .showcase-label {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--pink);
+    }
+
+    .showcase-list {
+      display: grid;
+      gap: 14px;
+      align-content: start;
+    }
+
+    .showcase-card {
+      position: relative;
+      padding: 18px;
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      overflow: hidden;
+    }
+
+    .showcase-card h3 {
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      margin-bottom: 8px;
+    }
+
+    .showcase-card p {
+      color: var(--muted);
+      line-height: 1.65;
+      font-size: 0.94rem;
+    }
+
+    .showcase-card .beam {
+      position: absolute;
+      inset: auto -20% -35% auto;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(41, 240, 255, 0.18), transparent 70%);
+      filter: blur(8px);
+    }
+
+    .audio-hint {
+      color: var(--muted);
+      font-size: 0.84rem;
+      line-height: 1.6;
+    }
+
+    .lobby-layout {
+      display: grid;
+      grid-template-columns: 0.92fr 1.08fr;
+      gap: 18px;
+      min-height: calc(100vh - 120px);
+    }
+
+    .panel-pad {
+      padding: 24px;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .panel-header h2 {
+      font-size: 1.26rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .panel-subtitle {
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.6;
+    }
+
+    .player-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      align-content: start;
+    }
+
+    .player-card {
+      position: relative;
+      padding: 16px;
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
+      align-items: center;
+      overflow: hidden;
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    }
+
+    .player-card.ready {
+      border-color: rgba(84, 255, 175, 0.5);
+      box-shadow: 0 0 26px rgba(84, 255, 175, 0.14);
+    }
+
+    .player-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(41, 240, 255, 0.32);
+    }
+
+    .avatar-shell {
+      position: relative;
+      width: 64px;
+      height: 64px;
+      border-radius: 20px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, rgba(41, 240, 255, 0.22), rgba(255, 67, 183, 0.2));
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      box-shadow: 0 0 28px rgba(41, 240, 255, 0.14);
+      overflow: hidden;
+    }
+
+    .avatar-shell::before {
+      content: "";
+      position: absolute;
+      inset: 5px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.02));
+    }
+
+    .avatar-initials {
+      position: relative;
+      z-index: 1;
+      font-size: 1.05rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+    }
+
+    .avatar-icon {
+      position: absolute;
+      top: 6px;
+      right: 8px;
+      z-index: 1;
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .player-input-wrap {
+      display: grid;
+      gap: 8px;
+    }
+
+    .player-input-wrap label {
+      color: var(--muted);
+      font-size: 0.76rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-weight: 800;
+    }
+
+    .player-input-wrap input {
+      width: 100%;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(3, 7, 19, 0.86);
+      color: var(--text);
+      border-radius: 14px;
+      padding: 12px 14px;
+      outline: none;
+      transition: border-color 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .player-input-wrap input:focus {
+      border-color: rgba(41, 240, 255, 0.52);
+      box-shadow: 0 0 18px rgba(41, 240, 255, 0.16);
+    }
+
+    .player-meta-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+
+    .bracket-panel {
+      display: grid;
+      grid-template-rows: auto auto 1fr;
+      gap: 18px;
+    }
+
+    .status-card {
+      padding: 16px 18px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .status-card strong {
+      display: block;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-size: 0.82rem;
+      color: var(--gold);
+      margin-bottom: 4px;
+    }
+
+    .status-card span {
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.5;
+    }
+
+    .bracket-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      align-items: start;
+    }
+
+    .stage-column {
+      display: grid;
+      gap: 12px;
+      align-content: start;
+    }
+
+    .stage-head {
+      padding: 12px 14px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .stage-head h3 {
+      font-size: 0.88rem;
+      color: var(--cyan);
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      margin-bottom: 6px;
+    }
+
+    .stage-head p {
+      color: var(--muted);
+      font-size: 0.76rem;
+      letter-spacing: 0.05em;
+    }
+
+    .bracket-match {
+      position: relative;
+      padding: 12px;
+      border-radius: 22px;
+      background: rgba(4, 8, 20, 0.84);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      display: grid;
+      gap: 8px;
+      min-height: 106px;
+      overflow: hidden;
+      transform-origin: center;
+      animation: match-glow 4.5s ease-in-out infinite alternate;
+    }
+
+    .bracket-match.current {
+      border-color: rgba(255, 150, 82, 0.72);
+      box-shadow: 0 0 28px rgba(255, 150, 82, 0.18);
+    }
+
+    .bracket-match.animating {
+      animation: bracket-flicker 0.3s linear infinite;
+    }
+
+    @keyframes match-glow {
+      from {
+        box-shadow: inset 0 0 0 rgba(0, 0, 0, 0), 0 0 0 rgba(41, 240, 255, 0);
+      }
+      to {
+        box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.015), 0 0 18px rgba(41, 240, 255, 0.08);
+      }
+    }
+
+    @keyframes bracket-flicker {
+      0% { transform: scale(1); filter: brightness(1); }
+      50% { transform: scale(1.015); filter: brightness(1.12); }
+      100% { transform: scale(1); filter: brightness(0.96); }
+    }
+
+    .bracket-slot {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      padding: 10px 12px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.035);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      font-size: 0.9rem;
+    }
+
+    .bracket-slot.pending {
+      color: #7584b0;
+      font-style: italic;
+    }
+
+    .bracket-slot.winner {
+      border-color: rgba(84, 255, 175, 0.44);
+      color: #d5ffe7;
+      box-shadow: 0 0 22px rgba(84, 255, 175, 0.12);
+    }
+
+    .bracket-slot em {
+      color: var(--muted);
+      font-style: normal;
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .arena-shell {
+      display: grid;
+      gap: 18px;
+      min-height: calc(100vh - 36px);
+      grid-template-rows: auto auto 1fr auto;
+    }
+
+    .match-head {
+      padding: 16px 20px;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .fighter-mini {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 0;
+    }
+
+    .fighter-mini.right {
+      justify-content: flex-end;
+      text-align: right;
+    }
+
+    .fighter-details {
+      min-width: 0;
+      display: grid;
+      gap: 6px;
+    }
+
+    .fighter-name {
+      font-size: 1.22rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 900;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .fighter-sub {
+      color: var(--muted);
+      font-size: 0.84rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+    }
+
+    .health-bar {
+      width: min(280px, 100%);
+      height: 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.05);
+      overflow: hidden;
+    }
+
+    .fighter-mini.right .health-bar {
+      margin-left: auto;
+    }
+
+    .health-fill {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, var(--green), var(--gold), var(--orange), var(--red));
+      box-shadow: 0 0 18px rgba(255, 150, 82, 0.2);
+      transition: width 0.3s ease;
+    }
+
+    .score-dots {
+      display: flex;
+      gap: 8px;
+    }
+
+    .fighter-mini.right .score-dots {
+      justify-content: flex-end;
+    }
+
+    .score-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: rgba(255, 255, 255, 0.04);
+      box-shadow: inset 0 0 12px rgba(255, 255, 255, 0.02);
+      transition: background 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+    }
+
+    .score-dot.active {
+      background: linear-gradient(135deg, var(--cyan), var(--pink));
+      border-color: rgba(255, 255, 255, 0.34);
+      box-shadow: 0 0 18px rgba(41, 240, 255, 0.2);
+      transform: scale(1.12);
+    }
+
+    .center-hud {
+      min-width: 280px;
+      text-align: center;
+    }
+
+    .stage-label {
+      color: var(--orange);
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      font-weight: 900;
+      font-size: 0.76rem;
+      margin-bottom: 8px;
+    }
+
+    .timer-number {
+      font-size: clamp(2rem, 6vw, 3.6rem);
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-shadow: 0 0 24px rgba(255, 150, 82, 0.2);
+      line-height: 1;
+    }
+
+    .timer-track {
+      width: min(320px, 100%);
+      height: 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.05);
+      overflow: hidden;
+      margin: 10px auto 0;
+    }
+
+    .timer-fill {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, var(--green), var(--gold), var(--orange), var(--red));
+      transition: width 0.12s linear;
+      box-shadow: 0 0 24px rgba(255, 150, 82, 0.24);
+    }
+
+    .question-stage {
+      padding: 22px 24px;
+      text-align: center;
+    }
+
+    .question-chips {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.055);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      font-size: 0.74rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #d6e3ff;
+      font-weight: 800;
+    }
+
+    .chip.topic {
+      color: var(--cyan);
+    }
+
+    .chip.mode {
+      color: #ffd8f0;
+      border-color: rgba(255, 67, 183, 0.2);
+    }
+
+    .chip.pressure {
+      color: #ffe0c5;
+      border-color: rgba(255, 150, 82, 0.24);
+    }
+
+    .chip.difficulty {
+      color: #d0ffea;
+      border-color: rgba(84, 255, 175, 0.24);
+    }
+
+    .question-prompt {
+      max-width: 1060px;
+      margin: 0 auto;
+      font-size: clamp(1.5rem, 3vw, 2.65rem);
+      font-weight: 900;
+      line-height: 1.2;
+      letter-spacing: 0.02em;
+      text-shadow: 0 0 20px rgba(255, 255, 255, 0.04);
+    }
+
+    .announcer-strip {
+      margin-top: 14px;
+      color: var(--muted);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-size: 0.78rem;
+      min-height: 1.2em;
+    }
+
+    .arena-main {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 220px minmax(0, 1fr);
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .battle-panel {
+      position: relative;
+      padding: 24px 22px;
+      display: grid;
+      grid-template-rows: auto auto 1fr auto;
+      gap: 16px;
+      overflow: hidden;
+      min-height: 520px;
+    }
+
+    .battle-panel.left {
+      background:
+        linear-gradient(180deg, rgba(10, 16, 38, 0.84), rgba(5, 9, 24, 0.94)),
+        linear-gradient(120deg, rgba(41, 240, 255, 0.08), transparent 40%);
+    }
+
+    .battle-panel.right {
+      background:
+        linear-gradient(180deg, rgba(16, 10, 36, 0.84), rgba(7, 5, 20, 0.94)),
+        linear-gradient(120deg, rgba(255, 67, 183, 0.08), transparent 40%);
+    }
+
+    .battle-panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.95;
+    }
+
+    .battle-panel.left::before {
+      background: radial-gradient(circle at top left, rgba(41, 240, 255, 0.16), transparent 32%);
+    }
+
+    .battle-panel.right::before {
+      background: radial-gradient(circle at top right, rgba(255, 67, 183, 0.16), transparent 32%);
+    }
+
+    .battle-panel.impact {
+      animation: impact-panel 0.6s ease;
+    }
+
+    @keyframes impact-panel {
+      0% {
+        box-shadow: 0 0 0 rgba(84, 255, 175, 0);
+        transform: scale(1);
+      }
+      25% {
+        box-shadow: 0 0 44px rgba(84, 255, 175, 0.28);
+        transform: scale(1.01);
+      }
+      100% {
+        box-shadow: 0 0 0 rgba(84, 255, 175, 0);
+        transform: scale(1);
+      }
+    }
+
+    .battle-topline {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      color: var(--muted);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .combo-tag {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      min-width: 110px;
+      text-align: center;
+    }
+
+    .answer-list {
+      display: grid;
+      gap: 12px;
+      align-content: start;
+    }
+
+    .answer-option {
+      position: relative;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 12px;
+      align-items: center;
+      padding: 16px 16px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.045);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      min-height: 74px;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+      overflow: hidden;
+    }
+
+    .answer-option::after {
+      content: "";
+      position: absolute;
+      inset: auto -20% -45% auto;
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.06), transparent 70%);
+      filter: blur(6px);
+      pointer-events: none;
+    }
+
+    .answer-option .marker {
+      width: 38px;
+      height: 38px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(220, 230, 255, 0.82));
+      color: #081322;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      box-shadow: 0 6px 14px rgba(255, 255, 255, 0.1);
+    }
+
+    .answer-option.selected {
+      transform: translateY(-2px);
+    }
+
+    .battle-panel.left .answer-option.selected {
+      border-color: rgba(41, 240, 255, 0.72);
+      box-shadow: 0 0 26px rgba(41, 240, 255, 0.16);
+      background: rgba(41, 240, 255, 0.08);
+    }
+
+    .battle-panel.right .answer-option.selected {
+      border-color: rgba(255, 67, 183, 0.72);
+      box-shadow: 0 0 26px rgba(255, 67, 183, 0.16);
+      background: rgba(255, 67, 183, 0.08);
+    }
+
+    .answer-option.correct {
+      border-color: rgba(84, 255, 175, 0.8);
+      background: rgba(84, 255, 175, 0.14);
+      box-shadow: 0 0 28px rgba(84, 255, 175, 0.18);
+    }
+
+    .answer-option.correct.explode {
+      animation: correct-explosion 0.8s ease forwards;
+    }
+
+    @keyframes correct-explosion {
+      0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 rgba(84, 255, 175, 0);
+      }
+      25% {
+        transform: scale(1.02);
+        box-shadow: 0 0 34px rgba(84, 255, 175, 0.26);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    .answer-option.wrong {
+      border-color: rgba(255, 93, 127, 0.8);
+      background: rgba(255, 93, 127, 0.12);
+      box-shadow: 0 0 26px rgba(255, 93, 127, 0.16);
+    }
+
+    .panel-shake {
+      animation: shake 0.28s linear;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-7px); }
+      50% { transform: translateX(8px); }
+      75% { transform: translateX(-5px); }
+    }
+
+    .score-pop {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(84, 255, 175, 0.12);
+      border: 1px solid rgba(84, 255, 175, 0.42);
+      color: #d5ffe8;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      opacity: 0;
+      transform: translateY(12px) scale(0.92);
+      pointer-events: none;
+    }
+
+    .score-pop.show {
+      animation: score-pop 0.9s ease forwards;
+    }
+
+    @keyframes score-pop {
+      0% {
+        opacity: 0;
+        transform: translateY(12px) scale(0.92);
+      }
+      18% {
+        opacity: 1;
+        transform: translateY(0) scale(1.04);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(-16px) scale(1.02);
+      }
+    }
+
+    .panel-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 0.8rem;
+      letter-spacing: 0.06em;
+    }
+
+    .keycap {
+      padding: 8px 12px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--text);
+      font-weight: 900;
+      font-size: 0.76rem;
+    }
+
+    .vs-core {
+      position: relative;
+      display: grid;
+      align-content: center;
+      justify-items: center;
+      padding: 24px 10px;
+      overflow: hidden;
+      text-align: center;
+    }
+
+    .vs-core::before,
+    .vs-core::after {
+      content: "";
+      position: absolute;
+      inset: auto 50% 18% auto;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      transform: translateX(50%);
+      background: radial-gradient(circle, rgba(41, 240, 255, 0.18), transparent 68%);
+      filter: blur(10px);
+      pointer-events: none;
+    }
+
+    .vs-core::after {
+      inset: 18% auto auto 50%;
+      background: radial-gradient(circle, rgba(255, 67, 183, 0.18), transparent 68%);
+    }
+
+    .vs-ring {
+      position: relative;
+      width: 154px;
+      height: 154px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 3rem;
+      font-weight: 900;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, rgba(41, 240, 255, 0.12), rgba(255, 67, 183, 0.12));
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      box-shadow:
+        0 0 40px rgba(41, 240, 255, 0.12),
+        inset 0 0 28px rgba(255, 255, 255, 0.02);
+      animation: vs-rotate 10s linear infinite;
+    }
+
+    .vs-ring::before {
+      content: "";
+      position: absolute;
+      inset: -10px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      animation: pulse-ring 2.6s ease-in-out infinite;
+    }
+
+    @keyframes vs-rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes pulse-ring {
+      0%, 100% {
+        opacity: 0.6;
+        transform: scale(1);
+      }
+      50% {
+        opacity: 1;
+        transform: scale(1.05);
+      }
+    }
+
+    .vs-ring span {
+      transform: rotate(-360deg);
+      animation: counter-rotate 10s linear infinite;
+    }
+
+    @keyframes counter-rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(-360deg); }
+    }
+
+    .countdown-core {
+      margin-top: 16px;
+      font-size: clamp(2.4rem, 5vw, 4rem);
+      font-weight: 900;
+      min-height: 1.2em;
+      text-shadow: 0 0 24px rgba(255, 150, 82, 0.2);
+    }
+
+    .vs-meta {
+      margin-top: 12px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-size: 0.76rem;
+      line-height: 1.6;
+    }
+
+    .match-footer {
+      padding: 14px 18px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-size: 0.74rem;
+    }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 18;
+      display: none;
+      place-items: center;
+      padding: 20px;
+      background: rgba(3, 7, 18, 0.72);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .overlay.show {
+      display: grid;
+    }
+
+    .overlay-card {
+      width: min(760px, 100%);
+      padding: 30px;
+      border-radius: 34px;
+      text-align: center;
+    }
+
+    .overlay-card h2 {
+      font-size: clamp(2.2rem, 7vw, 4rem);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 10px;
+    }
+
+    .overlay-card p {
+      color: var(--muted);
+      line-height: 1.8;
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    .overlay-pill {
+      display: inline-flex;
+      padding: 10px 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--cyan);
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-size: 0.78rem;
+      font-weight: 900;
+      margin-bottom: 16px;
+    }
+
+    .draw-progress {
+      width: min(540px, 100%);
+      height: 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.05);
+      overflow: hidden;
+      margin: 20px auto 0;
+    }
+
+    .draw-progress-fill {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, var(--cyan), var(--blue), var(--pink), var(--orange));
+      box-shadow: 0 0 24px rgba(41, 240, 255, 0.2);
+      transition: width 0.14s linear;
+    }
+
+    .intro-versus {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 18px;
+      align-items: center;
+      margin-top: 18px;
+      text-align: center;
+    }
+
+    .intro-player {
+      padding: 18px;
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .intro-player strong {
+      display: block;
+      font-size: clamp(1.25rem, 4vw, 2rem);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .intro-player span {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-size: 0.74rem;
+    }
+
+    .intro-vs {
+      font-size: clamp(2.6rem, 6vw, 4rem);
+      font-weight: 900;
+      letter-spacing: 0.18em;
+      color: #f6fbff;
+      text-shadow: 0 0 28px rgba(41, 240, 255, 0.18);
+    }
+
+    .settings-grid {
+      display: grid;
+      gap: 14px;
+      margin-top: 18px;
+      text-align: left;
+    }
+
+    .setting-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.045);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .setting-row strong {
+      display: block;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.86rem;
+      margin-bottom: 4px;
+    }
+
+    .setting-row span {
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.55;
+    }
+
+    .toggle-btn {
+      min-width: 108px;
+      padding: 10px 14px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+
+    .toggle-btn.active {
+      background: linear-gradient(135deg, rgba(41, 240, 255, 0.18), rgba(78, 120, 255, 0.18));
+      border-color: rgba(41, 240, 255, 0.42);
+      color: #dffcff;
+    }
+
+    .champion-shell {
+      min-height: calc(100vh - 36px);
+      display: grid;
+      place-items: center;
+    }
+
+    .champion-card {
+      width: min(980px, 100%);
+      padding: 40px 28px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .trophy-frame {
+      width: min(260px, 42vw);
+      margin: 12px auto 0;
+      filter: drop-shadow(0 0 32px rgba(255, 207, 102, 0.24));
+      animation: trophy-bob 2.8s ease-in-out infinite alternate;
+    }
+
+    @keyframes trophy-bob {
+      from { transform: translateY(0); }
+      to { transform: translateY(-12px); }
+    }
+
+    .champion-title {
+      margin-top: 8px;
+      font-size: clamp(2.4rem, 8vw, 5rem);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #ffe8ac;
+      text-shadow: 0 0 28px rgba(255, 207, 102, 0.18);
+    }
+
+    .champion-name {
+      margin-top: 12px;
+      font-size: clamp(2rem, 7vw, 4.4rem);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 900;
+      color: #c6fbff;
+      text-shadow: 0 0 28px rgba(41, 240, 255, 0.18);
+    }
+
+    .champion-copy {
+      max-width: 720px;
+      margin: 16px auto 0;
+      color: var(--muted);
+      line-height: 1.9;
+      font-size: 1rem;
+    }
+
+    .champion-path {
+      margin: 22px auto 0;
+      padding: 18px;
+      border-radius: 22px;
+      width: min(780px, 100%);
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--muted);
+      line-height: 1.75;
+    }
+
+    .champion-path strong {
+      display: block;
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-size: 0.8rem;
+      margin-bottom: 8px;
+    }
+
+    .celebration-bars {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin: 24px 0 20px;
+    }
+
+    .celebration-bars span {
+      width: 14px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, var(--cyan), var(--pink));
+      box-shadow: 0 0 18px rgba(41, 240, 255, 0.16);
+      animation: bars 1s ease-in-out infinite alternate;
+    }
+
+    .celebration-bars span:nth-child(1) { height: 18px; animation-delay: 0s; }
+    .celebration-bars span:nth-child(2) { height: 32px; animation-delay: 0.1s; }
+    .celebration-bars span:nth-child(3) { height: 54px; animation-delay: 0.2s; }
+    .celebration-bars span:nth-child(4) { height: 72px; animation-delay: 0.3s; }
+    .celebration-bars span:nth-child(5) { height: 44px; animation-delay: 0.4s; }
+    .celebration-bars span:nth-child(6) { height: 26px; animation-delay: 0.5s; }
+
+    @keyframes bars {
+      from {
+        transform: scaleY(0.8);
+        opacity: 0.72;
+      }
+      to {
+        transform: scaleY(1.08);
+        opacity: 1;
+      }
+    }
+
+    @media (max-width: 1180px) {
+      .menu-shell,
+      .lobby-layout,
+      .arena-main {
+        grid-template-columns: 1fr;
+      }
+
+      .menu-side {
+        grid-template-rows: auto auto auto;
+      }
+
+      .match-head {
+        grid-template-columns: 1fr;
+      }
+
+      .fighter-mini,
+      .fighter-mini.right {
+        justify-content: center;
+        text-align: center;
+      }
+
+      .fighter-mini.right .health-bar,
+      .fighter-mini.right .score-dots {
+        margin-left: 0;
+        justify-content: center;
+      }
+
+      .vs-core {
+        min-height: 280px;
+      }
+    }
+
+    @media (max-width: 880px) {
+      .app {
+        padding: 12px;
+      }
+
+      .player-grid,
+      .menu-strip,
+      .bracket-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .intro-versus {
+        grid-template-columns: 1fr;
+      }
+
+      .battle-panel {
+        min-height: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="bgCanvas" class="bg-canvas"></canvas>
+  <canvas id="celebrationCanvas" class="celebration-canvas"></canvas>
+  <div class="noise-overlay"></div>
+
+  <div class="app">
+    <section id="menuScreen" class="screen active menu-screen">
+      <div class="menu-shell">
+        <div class="glass-panel menu-hero">
+          <div class="hero-kicker">Ultra Neon Grammar Arena</div>
+          <h1 class="menu-title">
+            English Grammar
+            <span class="title-accent">Championship</span>
+          </h1>
+          <p class="menu-copy">
+            A cinematic split-screen esports tournament where 16 competitors fight through randomized brackets,
+            best-of-3 grammar battles, combo streaks, explosive score effects, and a championship finish worthy of a final trailer shot.
+          </p>
+          <div class="menu-actions action-row">
+            <button id="playMenuBtn" class="action-btn primary" type="button">Play Championship</button>
+            <button id="menuSettingsBtn" class="action-btn secondary" type="button">Settings</button>
+          </div>
+          <div class="menu-strip">
+            <div class="menu-stat">
+              <strong>16 Players</strong>
+              <span>Randomized bracket pairings every tournament with a dramatic draw animation.</span>
+            </div>
+            <div class="menu-stat">
+              <strong id="questionPoolCount">0 Questions</strong>
+              <span>Offline grammar challenge pool across all 9 required English topics.</span>
+            </div>
+            <div class="menu-stat">
+              <strong>Best Of 3</strong>
+              <span>Fastest correct answer wins each point, with survival pressure in the late game.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass-panel menu-side">
+          <div class="brand-tag floating">Championship Broadcast Feed</div>
+          <div class="showcase-list">
+            <div class="showcase-card floating">
+              <h3>Random Bracket Drama</h3>
+              <p>Every tournament draw is reseeded from scratch, so any player can collide with any rival in round one.</p>
+              <div class="beam"></div>
+            </div>
+            <div class="showcase-card floating" style="animation-delay:0.2s;">
+              <h3>Cinematic Battle Screen</h3>
+              <p>Cyberpunk split-screen combat, giant animated VS energy, timer pressure, health bars and combo glow.</p>
+              <div class="beam"></div>
+            </div>
+            <div class="showcase-card floating" style="animation-delay:0.35s;">
+              <h3>Champion Finish</h3>
+              <p>Confetti, fireworks, trophy spotlight, finals soundtrack and a dramatic champion reveal.</p>
+              <div class="beam"></div>
+            </div>
+          </div>
+          <p class="audio-hint">
+            Audio is fully synthesized offline. Click any menu button once to unlock lobby music, crowd ambience and match effects.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="lobbyScreen" class="screen">
+      <div class="top-nav">
+        <div class="action-row">
+          <div class="brand-tag">Tournament Lobby</div>
+          <div class="info-pill" id="seedStatusPill">Waiting For Draw</div>
+        </div>
+        <div class="action-row">
+          <button id="backToMenuBtn" class="action-btn subtle" type="button">Back</button>
+          <button id="lobbySettingsBtn" class="action-btn subtle" type="button">Settings</button>
+        </div>
+      </div>
+
+      <div class="lobby-layout">
+        <div class="glass-panel panel-pad">
+          <div class="panel-header">
+            <div>
+              <h2>Competitor Lineup</h2>
+              <p class="panel-subtitle">Edit names, keep the cards ready, and launch a new randomized 16-player bracket.</p>
+            </div>
+            <div class="mini-pill">Editable Player Cards</div>
+          </div>
+          <div id="playerGrid" class="player-grid"></div>
+        </div>
+
+        <div class="glass-panel panel-pad bracket-panel">
+          <div class="panel-header">
+            <div>
+              <h2>Championship Bracket</h2>
+              <p class="panel-subtitle">Round of 16 through Final. Every draw is random, dramatic and visible before kickoff.</p>
+            </div>
+            <div class="mini-pill">Random Matchups</div>
+          </div>
+
+          <div class="status-card">
+            <div>
+              <strong>Bracket Status</strong>
+              <span id="bracketStatusText">Press "Draw Random Bracket" to seed the arena.</span>
+            </div>
+            <div class="action-row">
+              <button id="randomizeNamesBtn" class="action-btn subtle" type="button">Randomize Names</button>
+              <button id="drawBracketBtn" class="action-btn secondary" type="button">Draw Random Bracket</button>
+              <button id="startChampionshipBtn" class="action-btn primary" type="button">Start Championship</button>
+            </div>
+          </div>
+
+          <div id="bracketGrid" class="bracket-grid"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="gameScreen" class="screen">
+      <div id="arenaShell" class="arena-shell">
+        <div class="glass-panel match-head">
+          <div class="fighter-mini">
+            <div id="leftAvatar" class="avatar-shell"><span class="avatar-initials">AA</span><span class="avatar-icon">✦</span></div>
+            <div class="fighter-details">
+              <div id="leftFighterName" class="fighter-name">Player 1</div>
+              <div class="fighter-sub">Left Side</div>
+              <div class="health-bar"><div id="leftHealthFill" class="health-fill"></div></div>
+              <div id="leftScoreDots" class="score-dots"></div>
+            </div>
+          </div>
+
+          <div class="center-hud">
+            <div id="currentStageLabel" class="stage-label">Round of 16</div>
+            <div id="timerNumber" class="timer-number">12.0</div>
+            <div class="timer-track"><div id="timerFill" class="timer-fill"></div></div>
+            <div id="matchCounterLabel" class="announcer-strip">Match 1 of 8</div>
+          </div>
+
+          <div class="fighter-mini right">
+            <div class="fighter-details">
+              <div id="rightFighterName" class="fighter-name">Player 2</div>
+              <div class="fighter-sub">Right Side</div>
+              <div class="health-bar"><div id="rightHealthFill" class="health-fill"></div></div>
+              <div id="rightScoreDots" class="score-dots"></div>
+            </div>
+            <div id="rightAvatar" class="avatar-shell"><span class="avatar-initials">BB</span><span class="avatar-icon">◆</span></div>
+          </div>
+        </div>
+
+        <div class="glass-panel question-stage">
+          <div class="question-chips">
+            <div id="topicChip" class="chip topic">Topic</div>
+            <div id="modeChip" class="chip mode">Mode</div>
+            <div id="pressureChip" class="chip pressure">Pressure</div>
+            <div id="difficultyChip" class="chip difficulty">Difficulty</div>
+          </div>
+          <div id="questionPrompt" class="question-prompt">The arena is charging...</div>
+          <div id="announcerText" class="announcer-strip">Best of 3. First correct answer takes the point.</div>
+        </div>
+
+        <div class="arena-main">
+          <div id="leftBattlePanel" class="glass-panel battle-panel left">
+            <div class="battle-topline">
+              <span>Round Wins</span>
+              <div id="leftComboTag" class="combo-tag">Combo x0</div>
+            </div>
+            <div class="fighter-sub">Left Player Controls</div>
+            <div id="leftAnswerList" class="answer-list"></div>
+            <div class="panel-controls">
+              <span class="keycap">W</span>
+              <span class="keycap">S</span>
+              <span class="keycap">SPACE</span>
+            </div>
+            <div id="leftScorePop" class="score-pop">Point</div>
+          </div>
+
+          <div class="vs-core">
+            <div class="vs-ring"><span>VS</span></div>
+            <div id="countdownCore" class="countdown-core">3</div>
+            <div id="vsMeta" class="vs-meta">Speed, survival and combo pressure live here.</div>
+          </div>
+
+          <div id="rightBattlePanel" class="glass-panel battle-panel right">
+            <div class="battle-topline">
+              <div id="rightComboTag" class="combo-tag">Combo x0</div>
+              <span>Round Wins</span>
+            </div>
+            <div class="fighter-sub" style="text-align:right;">Right Player Controls</div>
+            <div id="rightAnswerList" class="answer-list"></div>
+            <div class="panel-controls" style="justify-content:flex-end;">
+              <span class="keycap">UP</span>
+              <span class="keycap">DOWN</span>
+              <span class="keycap">ENTER</span>
+            </div>
+            <div id="rightScorePop" class="score-pop">Point</div>
+          </div>
+        </div>
+
+        <div class="glass-panel match-footer">
+          <span id="footerRoundStatus">First to 2 points wins the match.</span>
+          <span id="footerTopicHint">All questions stay within the required grammar topics.</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="championScreen" class="screen">
+      <div class="champion-shell">
+        <div class="glass-panel champion-card">
+          <div class="brand-tag">Grand Final Complete</div>
+          <svg class="trophy-frame" viewBox="0 0 240 240" aria-hidden="true">
+            <defs>
+              <linearGradient id="trophyGold" x1="0%" x2="100%" y1="0%" y2="100%">
+                <stop offset="0%" stop-color="#fff3b8" />
+                <stop offset="40%" stop-color="#ffd469" />
+                <stop offset="100%" stop-color="#ffb739" />
+              </linearGradient>
+            </defs>
+            <path fill="url(#trophyGold)" d="M72 36h96v32c0 23-13 42-32 52v17h24v18h-24v18h36v22H68v-22h36v-18H80v-18h24v-17c-19-10-32-29-32-52V36Zm-22 10c0 0-16 0-16 16 0 28 16 52 42 58v-19C63 96 54 74 54 54c0-5 2-8 2-8h-6Zm140 0h-6s2 3 2 8c0 20-9 42-22 47v19c26-6 42-30 42-58 0-16-16-16-16-16Z" />
+          </svg>
+          <div class="champion-title">Champion</div>
+          <div id="championName" class="champion-name">Player 1</div>
+          <p id="championCopy" class="champion-copy">
+            The arena lights are still shaking. A new grammar champion has taken the trophy with pure speed and precision.
+          </p>
+          <div class="celebration-bars">
+            <span></span><span></span><span></span><span></span><span></span><span></span>
+          </div>
+          <div id="championPath" class="champion-path">
+            <strong>Victory Route</strong>
+            Bracket summary loading...
+          </div>
+          <div class="action-row" style="justify-content:center; margin-top:26px;">
+            <button id="playAgainBtn" class="action-btn primary" type="button">Play Again</button>
+            <button id="championSettingsBtn" class="action-btn subtle" type="button">Settings</button>
+            <button id="returnMenuBtn" class="action-btn secondary" type="button">Back To Menu</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div id="drawOverlay" class="overlay">
+    <div class="glass-panel overlay-card">
+      <div class="overlay-pill">Bracket Generation</div>
+      <h2 id="drawOverlayTitle">Drawing The Arena</h2>
+      <p id="drawOverlayCopy">Randomizing all first-round matchups and locking the championship bracket.</p>
+      <div class="draw-progress">
+        <div id="drawProgressFill" class="draw-progress-fill"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="matchIntroOverlay" class="overlay">
+    <div class="glass-panel overlay-card">
+      <div id="introStagePill" class="overlay-pill">Round of 16</div>
+      <h2 id="introHeadline">Next Match</h2>
+      <p id="introCopy">The crowd is rising for the next grammar showdown.</p>
+      <div class="intro-versus">
+        <div class="intro-player">
+          <strong id="introLeftName">Player 1</strong>
+          <span>Left Side</span>
+        </div>
+        <div class="intro-vs">VS</div>
+        <div class="intro-player">
+          <strong id="introRightName">Player 2</strong>
+          <span>Right Side</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="resultOverlay" class="overlay">
+    <div class="glass-panel overlay-card">
+      <div class="overlay-pill">Match Complete</div>
+      <h2 id="resultWinnerName">Player 1</h2>
+      <p id="resultCopy">advances to the next stage of the English Grammar Championship.</p>
+      <div class="action-row" style="justify-content:center; margin-top:24px;">
+        <button id="continueTournamentBtn" class="action-btn primary" type="button">Continue</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="settingsOverlay" class="overlay">
+    <div class="glass-panel overlay-card">
+      <div class="overlay-pill">Broadcast Settings</div>
+      <h2>Systems Control</h2>
+      <p>Everything stays fully offline. Toggle music, ambience, effects and motion for the arena experience you want.</p>
+      <div class="settings-grid">
+        <div class="setting-row">
+          <div>
+            <strong>Music</strong>
+            <span>Lobby themes, battle synths and finals tension.</span>
+          </div>
+          <button class="toggle-btn" data-setting="music" type="button">On</button>
+        </div>
+        <div class="setting-row">
+          <div>
+            <strong>Sound Effects</strong>
+            <span>Hover, countdown, correct hit, wrong hit and celebration sounds.</span>
+          </div>
+          <button class="toggle-btn" data-setting="sfx" type="button">On</button>
+        </div>
+        <div class="setting-row">
+          <div>
+            <strong>Crowd Ambience</strong>
+            <span>Background arena noise and energy beds.</span>
+          </div>
+          <button class="toggle-btn" data-setting="ambience" type="button">On</button>
+        </div>
+        <div class="setting-row">
+          <div>
+            <strong>Motion FX</strong>
+            <span>Camera-style transitions, floating lights and animated UI motion.</span>
+          </div>
+          <button class="toggle-btn" data-setting="motion" type="button">On</button>
+        </div>
+      </div>
+      <div class="action-row" style="justify-content:center; margin-top:22px;">
+        <button id="closeSettingsBtn" class="action-btn primary" type="button">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const PLAYER_COUNT = 16;
+    const MATCH_WIN_SCORE = 2;
+    const WRONG_LOCK_MS = 700;
+    const ROUND_DATA = [
+      { label: "Round of 16", matches: 8 },
+      { label: "Quarter Finals", matches: 4 },
+      { label: "Semi Finals", matches: 2 },
+      { label: "Final", matches: 1 }
+    ];
+
+    const DEFAULT_NAMES = [
+      "Neon Lynx", "Turbo Echo", "Captain Syntax", "Glitch Raven",
+      "Nova Pulse", "Rapid Orbit", "Cyber Wolf", "Laser Comet",
+      "Pixel Vortex", "Shadow Falcon", "Crimson Byte", "Quantum Ace",
+      "Silver Nova", "Rocket Haze", "Voltage Hawk", "Prism Titan"
+    ];
+
+    const PLAYER_ICONS = ["✦", "◆", "⬢", "◈", "✧", "▲", "✺", "✶", "◉", "❖", "⬣", "✹", "✷", "✪", "✵", "✥"];
+
+    const dom = {
+      bgCanvas: document.getElementById("bgCanvas"),
+      celebrationCanvas: document.getElementById("celebrationCanvas"),
+      menuScreen: document.getElementById("menuScreen"),
+      lobbyScreen: document.getElementById("lobbyScreen"),
+      gameScreen: document.getElementById("gameScreen"),
+      championScreen: document.getElementById("championScreen"),
+      playMenuBtn: document.getElementById("playMenuBtn"),
+      menuSettingsBtn: document.getElementById("menuSettingsBtn"),
+      questionPoolCount: document.getElementById("questionPoolCount"),
+      seedStatusPill: document.getElementById("seedStatusPill"),
+      backToMenuBtn: document.getElementById("backToMenuBtn"),
+      lobbySettingsBtn: document.getElementById("lobbySettingsBtn"),
+      playerGrid: document.getElementById("playerGrid"),
+      bracketGrid: document.getElementById("bracketGrid"),
+      bracketStatusText: document.getElementById("bracketStatusText"),
+      randomizeNamesBtn: document.getElementById("randomizeNamesBtn"),
+      drawBracketBtn: document.getElementById("drawBracketBtn"),
+      startChampionshipBtn: document.getElementById("startChampionshipBtn"),
+      arenaShell: document.getElementById("arenaShell"),
+      leftAvatar: document.getElementById("leftAvatar"),
+      rightAvatar: document.getElementById("rightAvatar"),
+      leftFighterName: document.getElementById("leftFighterName"),
+      rightFighterName: document.getElementById("rightFighterName"),
+      leftHealthFill: document.getElementById("leftHealthFill"),
+      rightHealthFill: document.getElementById("rightHealthFill"),
+      leftScoreDots: document.getElementById("leftScoreDots"),
+      rightScoreDots: document.getElementById("rightScoreDots"),
+      currentStageLabel: document.getElementById("currentStageLabel"),
+      timerNumber: document.getElementById("timerNumber"),
+      timerFill: document.getElementById("timerFill"),
+      matchCounterLabel: document.getElementById("matchCounterLabel"),
+      topicChip: document.getElementById("topicChip"),
+      modeChip: document.getElementById("modeChip"),
+      pressureChip: document.getElementById("pressureChip"),
+      difficultyChip: document.getElementById("difficultyChip"),
+      questionPrompt: document.getElementById("questionPrompt"),
+      announcerText: document.getElementById("announcerText"),
+      leftBattlePanel: document.getElementById("leftBattlePanel"),
+      rightBattlePanel: document.getElementById("rightBattlePanel"),
+      leftComboTag: document.getElementById("leftComboTag"),
+      rightComboTag: document.getElementById("rightComboTag"),
+      leftAnswerList: document.getElementById("leftAnswerList"),
+      rightAnswerList: document.getElementById("rightAnswerList"),
+      leftScorePop: document.getElementById("leftScorePop"),
+      rightScorePop: document.getElementById("rightScorePop"),
+      countdownCore: document.getElementById("countdownCore"),
+      vsMeta: document.getElementById("vsMeta"),
+      footerRoundStatus: document.getElementById("footerRoundStatus"),
+      footerTopicHint: document.getElementById("footerTopicHint"),
+      drawOverlay: document.getElementById("drawOverlay"),
+      drawOverlayTitle: document.getElementById("drawOverlayTitle"),
+      drawOverlayCopy: document.getElementById("drawOverlayCopy"),
+      drawProgressFill: document.getElementById("drawProgressFill"),
+      matchIntroOverlay: document.getElementById("matchIntroOverlay"),
+      introStagePill: document.getElementById("introStagePill"),
+      introHeadline: document.getElementById("introHeadline"),
+      introCopy: document.getElementById("introCopy"),
+      introLeftName: document.getElementById("introLeftName"),
+      introRightName: document.getElementById("introRightName"),
+      resultOverlay: document.getElementById("resultOverlay"),
+      resultWinnerName: document.getElementById("resultWinnerName"),
+      resultCopy: document.getElementById("resultCopy"),
+      continueTournamentBtn: document.getElementById("continueTournamentBtn"),
+      settingsOverlay: document.getElementById("settingsOverlay"),
+      closeSettingsBtn: document.getElementById("closeSettingsBtn"),
+      championName: document.getElementById("championName"),
+      championCopy: document.getElementById("championCopy"),
+      championPath: document.getElementById("championPath"),
+      playAgainBtn: document.getElementById("playAgainBtn"),
+      championSettingsBtn: document.getElementById("championSettingsBtn"),
+      returnMenuBtn: document.getElementById("returnMenuBtn")
+    };
+
+    const state = {
+      players: [],
+      brackets: [],
+      previewBrackets: null,
+      seedOrder: [],
+      bracketReady: false,
+      bracketAnimating: false,
+      currentRoundIndex: 0,
+      currentMatchIndex: 0,
+      liveMatch: null,
+      currentQuestion: null,
+      questionBank: [],
+      usedQuestionIds: new Set(),
+      timerInterval: null,
+      countdownToken: 0,
+      selectionLeft: 0,
+      selectionRight: 0,
+      acceptingAnswers: false,
+      leftLockedUntil: 0,
+      rightLockedUntil: 0,
+      champion: null,
+      settings: {
+        music: true,
+        sfx: true,
+        ambience: true,
+        motion: true
+      },
+      audio: {
+        ctx: null,
+        master: null,
+        buses: null,
+        crowdSource: null,
+        musicTimer: null,
+        musicMode: "menu",
+        musicStep: 0
+      },
+      bgFx: {
+        ctx: dom.bgCanvas.getContext("2d"),
+        particles: [],
+        beams: []
+      },
+      celebrationFx: {
+        ctx: dom.celebrationCanvas.getContext("2d"),
+        running: false,
+        confetti: [],
+        fireworks: [],
+        raf: 0,
+        lastBurstAt: 0
+      },
+      hoveredButton: null
+    };
+
+    function init() {
+      createPlayers();
+      state.questionBank = buildQuestionBank();
+      dom.questionPoolCount.textContent = `${state.questionBank.length} Questions`;
+      createEmptyBrackets();
+      renderPlayerCards();
+      renderBracket();
+      wireEvents();
+      updateSettingButtons();
+      applyMotionSetting();
+      initBackgroundFx();
+      resizeCanvases();
+      window.addEventListener("resize", resizeCanvases);
+    }
+
+    // Tournament roster and bracket setup.
+    function createPlayers() {
+      state.players = DEFAULT_NAMES.map((name, index) => ({
+        id: `player-${index + 1}`,
+        name,
+        icon: PLAYER_ICONS[index % PLAYER_ICONS.length],
+        hue: (index * 26) % 360,
+        matchesWon: 0,
+        trail: []
+      }));
+    }
+
+    function createEmptyBrackets() {
+      state.brackets = ROUND_DATA.map((round, roundIndex) =>
+        Array.from({ length: round.matches }, (_, matchIndex) => ({
+          id: `r${roundIndex}-m${matchIndex}`,
+          roundIndex,
+          matchIndex,
+          player1: null,
+          player2: null,
+          winner: null
+        }))
+      );
+    }
+
+    function buildBracketFromOrder(order) {
+      const brackets = ROUND_DATA.map((round, roundIndex) =>
+        Array.from({ length: round.matches }, (_, matchIndex) => ({
+          id: `r${roundIndex}-m${matchIndex}`,
+          roundIndex,
+          matchIndex,
+          player1: null,
+          player2: null,
+          winner: null
+        }))
+      );
+
+      brackets[0].forEach((match, index) => {
+        match.player1 = order[index * 2] || null;
+        match.player2 = order[index * 2 + 1] || null;
+      });
+
+      return brackets;
+    }
+
+    function applySeedOrderToTournament() {
+      createEmptyBrackets();
+      const fresh = buildBracketFromOrder(state.seedOrder);
+      state.brackets = fresh;
+      state.players.forEach((player) => {
+        player.matchesWon = 0;
+        player.trail = [];
+      });
+      state.currentRoundIndex = 0;
+      state.currentMatchIndex = 0;
+      state.champion = null;
+      state.usedQuestionIds.clear();
+      renderBracket();
+    }
+
+    function renderPlayerCards() {
+      dom.playerGrid.innerHTML = "";
+      const fragment = document.createDocumentFragment();
+
+      state.players.forEach((player, index) => {
+        const card = document.createElement("div");
+        card.className = "player-card";
+        card.style.background = `linear-gradient(135deg, hsla(${player.hue}, 90%, 62%, 0.12), rgba(255,255,255,0.03))`;
+        card.innerHTML = `
+          <div class="avatar-shell" style="background: linear-gradient(135deg, hsla(${player.hue}, 90%, 62%, 0.28), rgba(255, 67, 183, 0.16));">
+            <span class="avatar-initials">${getInitials(player.name)}</span>
+            <span class="avatar-icon">${player.icon}</span>
+          </div>
+          <div class="player-input-wrap">
+            <label for="playerInput${index}">Competitor ${index + 1}</label>
+            <input id="playerInput${index}" type="text" maxlength="22" value="${escapeHtml(player.name)}" data-player-index="${index}" />
+            <div class="player-meta-row">
+              <span>Avatar ${player.icon}</span>
+              <span>Ready</span>
+            </div>
+          </div>
+        `;
+        fragment.appendChild(card);
+      });
+
+      dom.playerGrid.appendChild(fragment);
+    }
+
+    function renderBracket() {
+      const bracketSource = state.previewBrackets || state.brackets;
+      dom.bracketGrid.innerHTML = "";
+      const fragment = document.createDocumentFragment();
+
+      bracketSource.forEach((roundMatches, roundIndex) => {
+        const stageColumn = document.createElement("div");
+        stageColumn.className = "stage-column";
+
+        const stageHead = document.createElement("div");
+        stageHead.className = "stage-head";
+        stageHead.innerHTML = `
+          <h3>${ROUND_DATA[roundIndex].label}</h3>
+          <p>${ROUND_DATA[roundIndex].matches} match${ROUND_DATA[roundIndex].matches > 1 ? "es" : ""}</p>
+        `;
+        stageColumn.appendChild(stageHead);
+
+        roundMatches.forEach((match, matchIndex) => {
+          const matchCard = document.createElement("div");
+          matchCard.className = "bracket-match";
+          if (state.bracketAnimating && roundIndex === 0) {
+            matchCard.classList.add("animating");
+          }
+          if (!state.previewBrackets && state.currentRoundIndex === roundIndex && state.currentMatchIndex === matchIndex && dom.gameScreen.classList.contains("active")) {
+            matchCard.classList.add("current");
+          }
+
+          matchCard.appendChild(createBracketSlot(match.player1, match.winner && match.winner.id === match.player1?.id));
+          matchCard.appendChild(createBracketSlot(match.player2, match.winner && match.winner.id === match.player2?.id));
+          stageColumn.appendChild(matchCard);
+        });
+
+        fragment.appendChild(stageColumn);
+      });
+
+      dom.bracketGrid.appendChild(fragment);
+    }
+
+    function createBracketSlot(player, isWinner) {
+      const slot = document.createElement("div");
+      slot.className = "bracket-slot";
+
+      if (!player) {
+        slot.classList.add("pending");
+        slot.textContent = "Awaiting Winner";
+        return slot;
+      }
+
+      if (isWinner) {
+        slot.classList.add("winner");
+      }
+
+      slot.innerHTML = `<span>${escapeHtml(player.name)}</span><em>${player.matchesWon}W</em>`;
+      return slot;
+    }
+
+    function wireEvents() {
+      dom.playMenuBtn.addEventListener("click", async () => {
+        await ensureAudio();
+        switchScreen("lobbyScreen");
+        await dramaticBracketDraw();
+      });
+
+      dom.menuSettingsBtn.addEventListener("click", async () => {
+        await ensureAudio();
+        openSettings();
+      });
+      dom.lobbySettingsBtn.addEventListener("click", async () => {
+        await ensureAudio();
+        openSettings();
+      });
+      dom.championSettingsBtn.addEventListener("click", async () => {
+        await ensureAudio();
+        openSettings();
+      });
+      dom.closeSettingsBtn.addEventListener("click", closeSettings);
+
+      dom.backToMenuBtn.addEventListener("click", () => {
+        stopCelebrationFx();
+        switchScreen("menuScreen");
+      });
+
+      dom.randomizeNamesBtn.addEventListener("click", () => {
+        randomizePlayerNames();
+      });
+
+      dom.drawBracketBtn.addEventListener("click", async () => {
+        await ensureAudio();
+        await dramaticBracketDraw();
+      });
+
+      dom.startChampionshipBtn.addEventListener("click", async () => {
+        await ensureAudio();
+        if (state.bracketAnimating) return;
+        if (!state.bracketReady) {
+          await dramaticBracketDraw();
+        }
+        await playReadyUpEffect();
+        startTournament();
+      });
+
+      dom.continueTournamentBtn.addEventListener("click", continueTournament);
+      dom.playAgainBtn.addEventListener("click", async () => {
+        stopCelebrationFx();
+        switchScreen("lobbyScreen");
+        await dramaticBracketDraw();
+      });
+      dom.returnMenuBtn.addEventListener("click", () => {
+        stopCelebrationFx();
+        switchScreen("menuScreen");
+      });
+
+      dom.playerGrid.addEventListener("input", (event) => {
+        const input = event.target.closest("input[data-player-index]");
+        if (!input) return;
+        const index = Number(input.dataset.playerIndex);
+        state.players[index].name = input.value.trim() || `Player ${index + 1}`;
+        const card = input.closest(".player-card");
+        const initials = card?.querySelector(".avatar-initials");
+        if (initials) {
+          initials.textContent = getInitials(state.players[index].name);
+        }
+        if (state.seedOrder.length) {
+          renderBracket();
+        }
+      });
+
+      dom.playerGrid.addEventListener("focusin", () => playUiTone("focus"));
+
+      document.addEventListener("keydown", handleKeydown);
+      document.addEventListener("pointerover", handleButtonHover);
+      document.querySelectorAll(".toggle-btn").forEach((button) => {
+        button.addEventListener("click", async () => {
+          await ensureAudio();
+          const key = button.dataset.setting;
+          state.settings[key] = !state.settings[key];
+          if (key === "motion") {
+            applyMotionSetting();
+          }
+          updateSettingButtons();
+          applyAudioMix();
+          playUiTone("toggle");
+        });
+      });
+    }
+
+    function handleButtonHover(event) {
+      const button = event.target.closest("button");
+      if (!button || state.hoveredButton === button) return;
+      state.hoveredButton = button;
+      playUiTone("hover");
+      button.addEventListener("pointerleave", () => {
+        if (state.hoveredButton === button) {
+          state.hoveredButton = null;
+        }
+      }, { once: true });
+    }
+
+    function switchScreen(screenId) {
+      [dom.menuScreen, dom.lobbyScreen, dom.gameScreen, dom.championScreen].forEach((screen) => {
+        screen.classList.remove("active");
+      });
+      dom[screenId].classList.add("active");
+
+      if (screenId === "menuScreen" || screenId === "lobbyScreen") {
+        setMusicMode("menu");
+      }
+      if (screenId === "gameScreen") {
+        setMusicMode(state.currentRoundIndex >= 3 ? "final" : "battle");
+      }
+      if (screenId === "championScreen") {
+        setMusicMode("champion");
+      }
+    }
+
+    async function dramaticBracketDraw() {
+      if (state.bracketAnimating) return;
+
+      syncNamesFromInputs();
+      state.players.forEach((player) => {
+        player.matchesWon = 0;
+        player.trail = [];
+      });
+      state.bracketAnimating = true;
+      state.bracketReady = false;
+      dom.drawOverlay.classList.add("show");
+      dom.seedStatusPill.textContent = "Drawing";
+      dom.bracketStatusText.textContent = "Broadcast systems are randomizing the bracket...";
+      dom.drawProgressFill.style.width = "0%";
+      dom.drawOverlayTitle.textContent = "Drawing The Arena";
+      dom.drawOverlayCopy.textContent = "Randomizing every Round of 16 matchup with a live tournament reveal.";
+
+      const steps = 18;
+      for (let step = 0; step < steps; step += 1) {
+        const previewOrder = shuffleArray([...state.players]);
+        state.previewBrackets = buildBracketFromOrder(previewOrder);
+        renderBracket();
+        dom.drawProgressFill.style.width = `${((step + 1) / steps) * 100}%`;
+        await sleep(80 + step * 6);
+      }
+
+      state.seedOrder = shuffleArray([...state.players]);
+      state.previewBrackets = null;
+      applySeedOrderToTournament();
+      renderBracket();
+
+      dom.bracketStatusText.textContent = "Random bracket locked. The championship is ready.";
+      dom.seedStatusPill.textContent = "Bracket Locked";
+      dom.drawOverlayTitle.textContent = "Bracket Locked";
+      dom.drawOverlayCopy.textContent = "The randomized matchups are set. Launch the championship whenever you are ready.";
+
+      pulseReadyCards();
+      playUiTone("draw");
+      await sleep(520);
+      dom.drawOverlay.classList.remove("show");
+      state.bracketAnimating = false;
+      state.bracketReady = true;
+    }
+
+    function pulseReadyCards() {
+      [...dom.playerGrid.children].forEach((card, index) => {
+        card.classList.remove("ready");
+        setTimeout(() => card.classList.add("ready"), index * 45);
+      });
+    }
+
+    async function playReadyUpEffect() {
+      dom.bracketStatusText.textContent = "All competitors locked. Preparing the arena entrance...";
+      playUiTone("ready");
+      pulseReadyCards();
+      await sleep(780);
+    }
+
+    function startTournament() {
+      applySeedOrderToTournament();
+      switchScreen("gameScreen");
+      prepareCurrentMatch();
+    }
+
+    // Match flow: intros, best-of-3 scoring and round progression.
+    async function prepareCurrentMatch() {
+      clearMatchTimers();
+
+      const match = state.brackets[state.currentRoundIndex][state.currentMatchIndex];
+      state.liveMatch = {
+        player1: match.player1,
+        player2: match.player2,
+        score1: 0,
+        score2: 0,
+        combo1: 0,
+        combo2: 0,
+        roundCount: 0
+      };
+
+      updateMatchHeader();
+      renderBracket();
+      await showMatchIntro();
+      await startPointRound(true);
+    }
+
+    function updateMatchHeader() {
+      const match = state.liveMatch;
+      dom.leftFighterName.textContent = match.player1.name;
+      dom.rightFighterName.textContent = match.player2.name;
+      renderAvatar(dom.leftAvatar, match.player1);
+      renderAvatar(dom.rightAvatar, match.player2);
+      dom.currentStageLabel.textContent = ROUND_DATA[state.currentRoundIndex].label;
+      dom.matchCounterLabel.textContent = `Match ${state.currentMatchIndex + 1} of ${ROUND_DATA[state.currentRoundIndex].matches}`;
+      dom.footerRoundStatus.textContent = "Best of 3. First player to 2 points wins the match.";
+      dom.footerTopicHint.textContent = "Question types mix multiple choice, fill-in-the-blank, speed rounds and survival pressure.";
+      updateScoreDisplays();
+    }
+
+    function renderAvatar(container, player) {
+      container.style.background = `linear-gradient(135deg, hsla(${player.hue}, 90%, 62%, 0.28), rgba(255, 67, 183, 0.16))`;
+      container.querySelector(".avatar-initials").textContent = getInitials(player.name);
+      container.querySelector(".avatar-icon").textContent = player.icon;
+    }
+
+    function updateScoreDisplays() {
+      const match = state.liveMatch;
+      const leftHealth = 100 - (match.score2 * 50);
+      const rightHealth = 100 - (match.score1 * 50);
+
+      dom.leftHealthFill.style.width = `${leftHealth}%`;
+      dom.rightHealthFill.style.width = `${rightHealth}%`;
+      dom.leftComboTag.textContent = `Combo x${match.combo1}`;
+      dom.rightComboTag.textContent = `Combo x${match.combo2}`;
+      renderScoreDots(dom.leftScoreDots, match.score1);
+      renderScoreDots(dom.rightScoreDots, match.score2);
+    }
+
+    function renderScoreDots(container, score) {
+      container.innerHTML = "";
+      for (let i = 0; i < MATCH_WIN_SCORE; i += 1) {
+        const dot = document.createElement("div");
+        dot.className = "score-dot";
+        if (i < score) dot.classList.add("active");
+        container.appendChild(dot);
+      }
+    }
+
+    async function showMatchIntro() {
+      dom.introStagePill.textContent = ROUND_DATA[state.currentRoundIndex].label;
+      dom.introHeadline.textContent = state.currentRoundIndex === 3 ? "Grand Final" : "Next Match";
+      dom.introCopy.textContent = state.currentRoundIndex === 3
+        ? "The final arena lights are live. One more duel decides the champion."
+        : "The arena opens for another best-of-3 grammar showdown.";
+      dom.introLeftName.textContent = state.liveMatch.player1.name;
+      dom.introRightName.textContent = state.liveMatch.player2.name;
+      dom.matchIntroOverlay.classList.add("show");
+      playUiTone("intro");
+      await sleep(1600);
+      dom.matchIntroOverlay.classList.remove("show");
+    }
+
+    async function startPointRound(withCountdown) {
+      state.liveMatch.roundCount += 1;
+      state.selectionLeft = 0;
+      state.selectionRight = 0;
+      state.leftLockedUntil = 0;
+      state.rightLockedUntil = 0;
+      state.acceptingAnswers = false;
+      const token = ++state.countdownToken;
+
+      if (withCountdown) {
+        const beats = ["3", "2", "1", "GO!"];
+        for (const beat of beats) {
+          if (token !== state.countdownToken) return;
+          dom.countdownCore.textContent = beat;
+          dom.vsMeta.textContent = beat === "GO!" ? "Race for the first correct answer." : "Players ready...";
+          if (beat === "GO!") {
+            playSfx("go");
+            await sleep(420);
+          } else {
+            playSfx("countdown");
+            await sleep(680);
+          }
+        }
+      }
+
+      if (token !== state.countdownToken) return;
+      dom.countdownCore.textContent = "";
+      loadQuestion();
+    }
+
+    function loadQuestion() {
+      state.currentQuestion = getScaledQuestion();
+      state.acceptingAnswers = true;
+      renderQuestion();
+      renderAnswerLists();
+      startQuestionTimer(state.currentQuestion.timeLimit);
+      playUiTone("question");
+    }
+
+    function getScaledQuestion() {
+      if (state.usedQuestionIds.size >= state.questionBank.length) {
+        state.usedQuestionIds.clear();
+      }
+
+      const scorePressure = state.liveMatch.score1 === 1 && state.liveMatch.score2 === 1 ? 1 : 0;
+      const targetLevel = Math.min(3, 1 + state.currentRoundIndex + scorePressure);
+      const minLevel = Math.max(1, targetLevel - 1);
+
+      const eligible = state.questionBank.filter((question) =>
+        !state.usedQuestionIds.has(question.id) &&
+        question.level >= minLevel &&
+        question.level <= targetLevel
+      );
+
+      const fallbackPool = eligible.length ? eligible : state.questionBank.filter((question) => !state.usedQuestionIds.has(question.id));
+      const baseQuestion = fallbackPool[Math.floor(Math.random() * fallbackPool.length)];
+      state.usedQuestionIds.add(baseQuestion.id);
+
+      let pressure = "Standard Duel";
+      if (state.currentRoundIndex >= 2 && state.liveMatch.score1 === state.liveMatch.score2) {
+        pressure = "Survival Mode";
+      } else if (Math.random() < 0.38) {
+        pressure = "Speed Round";
+      }
+
+      let timeLimit = { 1: 12.5, 2: 10.8, 3: 9.2 }[baseQuestion.level];
+      if (pressure === "Speed Round") timeLimit -= 2.2;
+      if (pressure === "Survival Mode") timeLimit -= 1.2;
+      if (baseQuestion.mode === "Fill In The Blank") timeLimit += 0.6;
+      timeLimit = Math.max(6.2, timeLimit);
+
+      return {
+        ...baseQuestion,
+        pressure,
+        timeLimit,
+        difficultyLabel: ["Rookie", "Pro", "Elite"][baseQuestion.level - 1]
+      };
+    }
+
+    function renderQuestion() {
+      dom.topicChip.textContent = state.currentQuestion.topic;
+      dom.modeChip.textContent = state.currentQuestion.mode;
+      dom.pressureChip.textContent = state.currentQuestion.pressure;
+      dom.difficultyChip.textContent = state.currentQuestion.difficultyLabel;
+      dom.questionPrompt.textContent = state.currentQuestion.prompt;
+      dom.announcerText.textContent = `${state.currentQuestion.pressure} live. First correct answer scores the point.`;
+      dom.vsMeta.textContent = `${state.currentQuestion.mode} • ${state.currentQuestion.difficultyLabel}`;
+    }
+
+    function renderAnswerLists() {
+      dom.leftAnswerList.innerHTML = "";
+      dom.rightAnswerList.innerHTML = "";
+
+      state.currentQuestion.options.forEach((option, index) => {
+        dom.leftAnswerList.appendChild(createAnswerNode(option, index));
+        dom.rightAnswerList.appendChild(createAnswerNode(option, index));
+      });
+
+      updateSelections();
+    }
+
+    function createAnswerNode(option, index) {
+      const answer = document.createElement("div");
+      answer.className = "answer-option";
+      answer.dataset.index = String(index);
+      answer.innerHTML = `
+        <div class="marker">${String.fromCharCode(65 + index)}</div>
+        <div>${escapeHtml(option)}</div>
+      `;
+      return answer;
+    }
+
+    function updateSelections() {
+      [...dom.leftAnswerList.children].forEach((node, index) => {
+        node.classList.toggle("selected", index === state.selectionLeft);
+      });
+      [...dom.rightAnswerList.children].forEach((node, index) => {
+        node.classList.toggle("selected", index === state.selectionRight);
+      });
+    }
+
+    function startQuestionTimer(seconds) {
+      clearInterval(state.timerInterval);
+      const started = performance.now();
+
+      dom.timerNumber.textContent = seconds.toFixed(1);
+      dom.timerFill.style.width = "100%";
+
+      state.timerInterval = setInterval(() => {
+        const elapsed = (performance.now() - started) / 1000;
+        const remaining = Math.max(0, seconds - elapsed);
+        const percent = (remaining / seconds) * 100;
+        dom.timerNumber.textContent = remaining.toFixed(1);
+        dom.timerFill.style.width = `${percent}%`;
+
+        if (remaining <= 0) {
+          clearInterval(state.timerInterval);
+          handleQuestionTimeout();
+        }
+      }, 100);
+    }
+
+    async function handleQuestionTimeout() {
+      if (!state.acceptingAnswers) return;
+      state.acceptingAnswers = false;
+      playSfx("timeout");
+      dom.announcerText.textContent = "No hit landed. New question incoming.";
+      dom.countdownCore.textContent = "RESET";
+      await sleep(620);
+      dom.countdownCore.textContent = "";
+      loadQuestion();
+    }
+
+    function handleKeydown(event) {
+      if (!dom.gameScreen.classList.contains("active") || !state.currentQuestion) {
+        return;
+      }
+
+      const key = event.key;
+      const lower = key.toLowerCase();
+      const now = performance.now();
+      let handled = true;
+
+      if (lower === "w") {
+        moveSelection("left", -1, now);
+      } else if (lower === "s") {
+        moveSelection("left", 1, now);
+      } else if (key === " ") {
+        submitSelection("left", now);
+      } else if (key === "ArrowUp") {
+        moveSelection("right", -1, now);
+      } else if (key === "ArrowDown") {
+        moveSelection("right", 1, now);
+      } else if (key === "Enter") {
+        submitSelection("right", now);
+      } else {
+        handled = false;
+      }
+
+      if (handled) {
+        event.preventDefault();
+      }
+    }
+
+    function moveSelection(side, delta, now) {
+      if (!state.acceptingAnswers || isLocked(side, now)) return;
+      if (side === "left") {
+        state.selectionLeft = wrapIndex(state.selectionLeft + delta, 4);
+      } else {
+        state.selectionRight = wrapIndex(state.selectionRight + delta, 4);
+      }
+      updateSelections();
+      playUiTone(side === "left" ? "moveLeft" : "moveRight");
+    }
+
+    function submitSelection(side, now) {
+      if (!state.acceptingAnswers || isLocked(side, now)) return;
+
+      const selection = side === "left" ? state.selectionLeft : state.selectionRight;
+      const list = side === "left" ? dom.leftAnswerList : dom.rightAnswerList;
+      const panel = side === "left" ? dom.leftBattlePanel : dom.rightBattlePanel;
+      const selectedNode = list.children[selection];
+      const isCorrect = selection === state.currentQuestion.correctIndex;
+
+      if (isCorrect) {
+        state.acceptingAnswers = false;
+        revealCorrectAnswer();
+        selectedNode.classList.add("explode");
+        panel.classList.add("impact");
+        setTimeout(() => panel.classList.remove("impact"), 600);
+        playSfx("correct");
+        flashScore(side);
+        awardPoint(side);
+      } else {
+        selectedNode.classList.add("wrong");
+        panel.classList.add("panel-shake");
+        setTimeout(() => panel.classList.remove("panel-shake"), 320);
+        if (side === "left") {
+          state.leftLockedUntil = now + WRONG_LOCK_MS;
+        } else {
+          state.rightLockedUntil = now + WRONG_LOCK_MS;
+        }
+        playSfx("wrong");
+        setTimeout(() => selectedNode.classList.remove("wrong"), WRONG_LOCK_MS);
+      }
+    }
+
+    function revealCorrectAnswer() {
+      const correctIndex = state.currentQuestion.correctIndex;
+      [dom.leftAnswerList, dom.rightAnswerList].forEach((list) => {
+        [...list.children].forEach((node, index) => {
+          if (index === correctIndex) {
+            node.classList.add("correct");
+          }
+        });
+      });
+    }
+
+    function flashScore(side) {
+      const pop = side === "left" ? dom.leftScorePop : dom.rightScorePop;
+      pop.classList.remove("show");
+      void pop.offsetWidth;
+      pop.classList.add("show");
+    }
+
+    async function awardPoint(side) {
+      clearInterval(state.timerInterval);
+
+      const leftWinsPoint = side === "left";
+      if (leftWinsPoint) {
+        state.liveMatch.score1 += 1;
+        state.liveMatch.combo1 += 1;
+        state.liveMatch.combo2 = 0;
+        dom.announcerText.textContent = `${state.liveMatch.player1.name} strikes first and takes the point.`;
+      } else {
+        state.liveMatch.score2 += 1;
+        state.liveMatch.combo2 += 1;
+        state.liveMatch.combo1 = 0;
+        dom.announcerText.textContent = `${state.liveMatch.player2.name} lands the answer and steals the point.`;
+      }
+
+      updateScoreDisplays();
+      dom.footerRoundStatus.textContent = `Score ${state.liveMatch.score1} - ${state.liveMatch.score2}. First to ${MATCH_WIN_SCORE}.`;
+      dom.countdownCore.textContent = leftWinsPoint ? "LEFT" : "RIGHT";
+
+      await sleep(1050);
+      dom.countdownCore.textContent = "";
+
+      if (state.liveMatch.score1 >= MATCH_WIN_SCORE || state.liveMatch.score2 >= MATCH_WIN_SCORE) {
+        finishMatch(leftWinsPoint ? "left" : "right");
+        return;
+      }
+
+      await startPointRound(true);
+    }
+
+    function finishMatch(side) {
+      const winner = side === "left" ? state.liveMatch.player1 : state.liveMatch.player2;
+      const loser = side === "left" ? state.liveMatch.player2 : state.liveMatch.player1;
+
+      winner.matchesWon += 1;
+      winner.trail.push(`${ROUND_DATA[state.currentRoundIndex].label}: defeated ${loser.name}`);
+
+      const bracketMatch = state.brackets[state.currentRoundIndex][state.currentMatchIndex];
+      bracketMatch.winner = winner;
+
+      if (state.currentRoundIndex < state.brackets.length - 1) {
+        const nextRoundMatch = state.brackets[state.currentRoundIndex + 1][Math.floor(state.currentMatchIndex / 2)];
+        if (state.currentMatchIndex % 2 === 0) {
+          nextRoundMatch.player1 = winner;
+        } else {
+          nextRoundMatch.player2 = winner;
+        }
+      } else {
+        state.champion = winner;
+      }
+
+      renderBracket();
+      playSfx("matchWin");
+
+      dom.resultWinnerName.textContent = winner.name;
+      dom.resultCopy.textContent = state.champion
+        ? "wins the grand final and becomes the English Grammar Champion."
+        : `advances through the ${ROUND_DATA[state.currentRoundIndex].label} and moves deeper into the bracket.`;
+      dom.resultOverlay.classList.add("show");
+    }
+
+    function continueTournament() {
+      dom.resultOverlay.classList.remove("show");
+
+      if (state.champion) {
+        showChampionScreen();
+        return;
+      }
+
+      if (state.currentMatchIndex < ROUND_DATA[state.currentRoundIndex].matches - 1) {
+        state.currentMatchIndex += 1;
+      } else {
+        state.currentRoundIndex += 1;
+        state.currentMatchIndex = 0;
+      }
+
+      setMusicMode(state.currentRoundIndex >= 3 ? "final" : "battle");
+      prepareCurrentMatch();
+    }
+
+    function showChampionScreen() {
+      dom.championName.textContent = state.champion.name;
+      dom.championCopy.textContent = `${state.champion.name} survived every stage, took the final duel, and lifted the trophy with ${state.champion.matchesWon} tournament match wins.`;
+      dom.championPath.innerHTML = `<strong>Victory Route</strong>${state.champion.trail.map(escapeHtml).join(" • ")}`;
+      switchScreen("championScreen");
+      startCelebrationFx();
+      playSfx("champion");
+    }
+
+    function openSettings() {
+      dom.settingsOverlay.classList.add("show");
+    }
+
+    function closeSettings() {
+      dom.settingsOverlay.classList.remove("show");
+    }
+
+    function updateSettingButtons() {
+      document.querySelectorAll(".toggle-btn").forEach((button) => {
+        const key = button.dataset.setting;
+        const enabled = state.settings[key];
+        button.classList.toggle("active", enabled);
+        button.textContent = enabled ? "On" : "Off";
+      });
+    }
+
+    function applyMotionSetting() {
+      document.body.classList.toggle("reduced-motion", !state.settings.motion);
+    }
+
+    function randomizePlayerNames() {
+      const shuffledNames = shuffleArray([...DEFAULT_NAMES]);
+      state.players.forEach((player, index) => {
+        player.name = shuffledNames[index] || `Player ${index + 1}`;
+      });
+      renderPlayerCards();
+      renderBracket();
+      dom.bracketStatusText.textContent = "Names refreshed. Redraw the bracket if you want a brand-new opening round.";
+      playUiTone("shuffleNames");
+    }
+
+    function syncNamesFromInputs() {
+      [...dom.playerGrid.querySelectorAll("input[data-player-index]")].forEach((input) => {
+        const index = Number(input.dataset.playerIndex);
+        state.players[index].name = input.value.trim() || `Player ${index + 1}`;
+      });
+    }
+
+    function clearMatchTimers() {
+      clearInterval(state.timerInterval);
+      state.timerInterval = null;
+      state.acceptingAnswers = false;
+    }
+
+    function isLocked(side, now) {
+      return side === "left" ? now < state.leftLockedUntil : now < state.rightLockedUntil;
+    }
+
+    function wrapIndex(value, size) {
+      return (value + size) % size;
+    }
+
+    function getInitials(name) {
+      const parts = name.trim().split(/\s+/).filter(Boolean);
+      return ((parts[0]?.[0] || "P") + (parts[1]?.[0] || "")).toUpperCase();
+    }
+
+    function escapeHtml(value) {
+      return value
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;");
+    }
+
+    function shuffleArray(items) {
+      const copy = [...items];
+      for (let i = copy.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function sleep(ms) {
+      return new Promise((resolve) => setTimeout(resolve, ms));
+    }
+
+    // Audio engine: fully offline synthesis for music, ambience and effects.
+    async function ensureAudio() {
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContextClass) return;
+
+      if (!state.audio.ctx) {
+        state.audio.ctx = new AudioContextClass();
+        state.audio.master = state.audio.ctx.createGain();
+        state.audio.buses = {
+          music: state.audio.ctx.createGain(),
+          sfx: state.audio.ctx.createGain(),
+          ambience: state.audio.ctx.createGain()
+        };
+
+        state.audio.buses.music.connect(state.audio.master);
+        state.audio.buses.sfx.connect(state.audio.master);
+        state.audio.buses.ambience.connect(state.audio.master);
+        state.audio.master.connect(state.audio.ctx.destination);
+        buildCrowdLoop();
+        applyAudioMix();
+        setMusicMode("menu");
+      }
+
+      if (state.audio.ctx.state === "suspended") {
+        await state.audio.ctx.resume();
+      }
+    }
+
+    function applyAudioMix() {
+      if (!state.audio.ctx) return;
+      state.audio.master.gain.value = 0.9;
+      state.audio.buses.music.gain.value = state.settings.music ? 0.09 : 0;
+      state.audio.buses.sfx.gain.value = state.settings.sfx ? 0.26 : 0;
+      state.audio.buses.ambience.gain.value = state.settings.ambience ? 0.12 : 0;
+    }
+
+    function buildCrowdLoop() {
+      const ctx = state.audio.ctx;
+      const size = ctx.sampleRate * 2;
+      const buffer = ctx.createBuffer(1, size, ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+
+      for (let i = 0; i < size; i += 1) {
+        data[i] = (Math.random() * 2 - 1) * 0.03;
+      }
+
+      const source = ctx.createBufferSource();
+      const filter = ctx.createBiquadFilter();
+      filter.type = "lowpass";
+      filter.frequency.value = 420;
+      source.buffer = buffer;
+      source.loop = true;
+      source.connect(filter);
+      filter.connect(state.audio.buses.ambience);
+      source.start();
+      state.audio.crowdSource = source;
+    }
+
+    function setMusicMode(mode) {
+      state.audio.musicMode = mode;
+      if (!state.audio.ctx) return;
+      startMusicLoop();
+    }
+
+    function startMusicLoop() {
+      clearInterval(state.audio.musicTimer);
+      state.audio.musicStep = 0;
+
+      const patterns = {
+        menu: {
+          tempo: 360,
+          lead: [261.63, 392.0, 329.63, 392.0, 523.25, 392.0, 329.63, 392.0],
+          bass: [130.81, 0, 164.81, 0, 196.0, 0, 164.81, 0]
+        },
+        battle: {
+          tempo: 270,
+          lead: [220.0, 261.63, 293.66, 392.0, 349.23, 293.66, 440.0, 392.0],
+          bass: [110.0, 110.0, 0, 123.47, 0, 110.0, 98.0, 0]
+        },
+        final: {
+          tempo: 220,
+          lead: [196.0, 246.94, 293.66, 392.0, 349.23, 493.88, 440.0, 392.0],
+          bass: [98.0, 98.0, 110.0, 146.83, 123.47, 164.81, 146.83, 110.0]
+        },
+        champion: {
+          tempo: 320,
+          lead: [392.0, 523.25, 659.25, 783.99, 659.25, 523.25, 783.99, 987.77],
+          bass: [196.0, 261.63, 329.63, 392.0, 329.63, 261.63, 392.0, 493.88]
+        }
+      };
+
+      const pattern = patterns[state.audio.musicMode] || patterns.menu;
+      state.audio.musicTimer = setInterval(() => {
+        if (!state.audio.ctx || !state.settings.music) return;
+        const step = state.audio.musicStep % pattern.lead.length;
+        const leadFreq = pattern.lead[step];
+        const bassFreq = pattern.bass[step];
+
+        if (leadFreq) {
+          playTone(leadFreq, 0.22, "triangle", 0.09, 0, "music");
+        }
+        if (bassFreq) {
+          playTone(bassFreq, 0.24, "sine", 0.06, 0, "music");
+        }
+        state.audio.musicStep += 1;
+      }, pattern.tempo);
+    }
+
+    function playTone(freq, duration, type, volume, delay = 0, bus = "sfx") {
+      if (!state.audio.ctx) return;
+      const ctx = state.audio.ctx;
+      const when = ctx.currentTime + delay;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, when);
+      gain.gain.setValueAtTime(0.0001, when);
+      gain.gain.exponentialRampToValueAtTime(volume, when + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, when + duration);
+
+      osc.connect(gain);
+      gain.connect(state.audio.buses[bus]);
+      osc.start(when);
+      osc.stop(when + duration + 0.03);
+    }
+
+    function playUiTone(kind) {
+      if (!state.settings.sfx) return;
+      const maps = {
+        hover: () => playTone(640, 0.08, "triangle", 0.05),
+        toggle: () => playTone(760, 0.1, "triangle", 0.05),
+        focus: () => playTone(520, 0.07, "triangle", 0.04),
+        shuffleNames: () => { playTone(480, 0.08, "triangle", 0.05); playTone(660, 0.14, "triangle", 0.04, 0.07); },
+        draw: () => { playTone(440, 0.08, "square", 0.05); playTone(620, 0.14, "triangle", 0.05, 0.06); },
+        ready: () => { playTone(460, 0.08, "square", 0.05); playTone(700, 0.18, "triangle", 0.05, 0.08); },
+        intro: () => { playTone(390, 0.1, "triangle", 0.05); playTone(590, 0.16, "triangle", 0.05, 0.08); },
+        moveLeft: () => playTone(430, 0.05, "triangle", 0.04),
+        moveRight: () => playTone(520, 0.05, "triangle", 0.04),
+        question: () => playTone(560, 0.06, "triangle", 0.04)
+      };
+      maps[kind]?.();
+    }
+
+    function playSfx(kind) {
+      if (!state.settings.sfx) return;
+      const actions = {
+        countdown: () => playTone(520, 0.1, "square", 0.06),
+        go: () => { playTone(560, 0.1, "square", 0.06); playTone(860, 0.2, "triangle", 0.06, 0.1); },
+        correct: () => { playTone(720, 0.12, "square", 0.08); playTone(1020, 0.2, "triangle", 0.07, 0.06); },
+        wrong: () => playTone(180, 0.18, "sawtooth", 0.08),
+        timeout: () => playTone(220, 0.24, "sawtooth", 0.07),
+        matchWin: () => { playTone(500, 0.12, "triangle", 0.08); playTone(780, 0.16, "triangle", 0.08, 0.08); playTone(1080, 0.24, "triangle", 0.07, 0.16); },
+        champion: () => { playTone(392, 0.24, "triangle", 0.08); playTone(523.25, 0.24, "triangle", 0.08, 0.12); playTone(659.25, 0.28, "triangle", 0.08, 0.24); playTone(783.99, 0.32, "triangle", 0.07, 0.36); }
+      };
+      actions[kind]?.();
+    }
+
+    // Background arena particle system.
+    function initBackgroundFx() {
+      const { particles, beams } = state.bgFx;
+      particles.length = 0;
+      beams.length = 0;
+
+      for (let i = 0; i < 90; i += 1) {
+        particles.push({
+          x: Math.random() * window.innerWidth,
+          y: Math.random() * window.innerHeight,
+          r: 1 + Math.random() * 2.5,
+          speedX: -0.15 + Math.random() * 0.3,
+          speedY: 0.08 + Math.random() * 0.34,
+          hue: Math.random() > 0.5 ? 190 : 325
+        });
+      }
+
+      for (let i = 0; i < 4; i += 1) {
+        beams.push({
+          x: Math.random() * window.innerWidth,
+          width: 180 + Math.random() * 260,
+          alpha: 0.02 + Math.random() * 0.03,
+          speed: 0.08 + Math.random() * 0.18,
+          hue: i % 2 === 0 ? 190 : 320
+        });
+      }
+
+      requestAnimationFrame(animateBackgroundFx);
+    }
+
+    function animateBackgroundFx() {
+      const ctx = state.bgFx.ctx;
+      const width = dom.bgCanvas.width;
+      const height = dom.bgCanvas.height;
+      ctx.clearRect(0, 0, width, height);
+
+      state.bgFx.beams.forEach((beam) => {
+        beam.x += beam.speed;
+        if (beam.x - beam.width > width) {
+          beam.x = -beam.width;
+        }
+
+        const gradient = ctx.createLinearGradient(beam.x, 0, beam.x + beam.width, height);
+        gradient.addColorStop(0, `hsla(${beam.hue}, 100%, 62%, 0)`);
+        gradient.addColorStop(0.5, `hsla(${beam.hue}, 100%, 62%, ${beam.alpha})`);
+        gradient.addColorStop(1, `hsla(${beam.hue}, 100%, 62%, 0)`);
+        ctx.fillStyle = gradient;
+        ctx.fillRect(beam.x, 0, beam.width, height);
+      });
+
+      state.bgFx.particles.forEach((particle) => {
+        particle.x += particle.speedX;
+        particle.y += particle.speedY;
+
+        if (particle.y > height + 12) particle.y = -12;
+        if (particle.x > width + 12) particle.x = -12;
+        if (particle.x < -12) particle.x = width + 12;
+
+        ctx.beginPath();
+        ctx.fillStyle = `hsla(${particle.hue}, 100%, 70%, 0.55)`;
+        ctx.shadowBlur = 16;
+        ctx.shadowColor = `hsla(${particle.hue}, 100%, 65%, 0.32)`;
+        ctx.arc(particle.x, particle.y, particle.r, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      ctx.shadowBlur = 0;
+      requestAnimationFrame(animateBackgroundFx);
+    }
+
+    // Champion celebration: confetti plus simple fireworks bursts.
+    function startCelebrationFx() {
+      const fx = state.celebrationFx;
+      fx.running = true;
+      fx.confetti = Array.from({ length: 160 }, () => createConfettiPiece());
+      fx.fireworks = [];
+      fx.lastBurstAt = performance.now();
+      cancelAnimationFrame(fx.raf);
+      fx.raf = requestAnimationFrame(animateCelebrationFx);
+    }
+
+    function stopCelebrationFx() {
+      const fx = state.celebrationFx;
+      fx.running = false;
+      cancelAnimationFrame(fx.raf);
+      fx.ctx.clearRect(0, 0, dom.celebrationCanvas.width, dom.celebrationCanvas.height);
+    }
+
+    function createConfettiPiece() {
+      const colors = ["#29f0ff", "#ff43b7", "#ffcf66", "#54ffaf", "#ffffff"];
+      return {
+        x: Math.random() * dom.celebrationCanvas.width,
+        y: Math.random() * -dom.celebrationCanvas.height,
+        w: 6 + Math.random() * 10,
+        h: 8 + Math.random() * 12,
+        speedX: -2 + Math.random() * 4,
+        speedY: 2 + Math.random() * 5,
+        spin: -0.14 + Math.random() * 0.28,
+        angle: Math.random() * Math.PI,
+        color: colors[Math.floor(Math.random() * colors.length)]
+      };
+    }
+
+    function spawnFirework() {
+      const centerX = 0.15 * dom.celebrationCanvas.width + Math.random() * dom.celebrationCanvas.width * 0.7;
+      const centerY = 0.12 * dom.celebrationCanvas.height + Math.random() * dom.celebrationCanvas.height * 0.35;
+      const palette = ["#29f0ff", "#ff43b7", "#ffcf66", "#54ffaf", "#ffffff"];
+
+      for (let i = 0; i < 32; i += 1) {
+        const angle = (Math.PI * 2 * i) / 32;
+        const speed = 1.5 + Math.random() * 4.2;
+        state.celebrationFx.fireworks.push({
+          x: centerX,
+          y: centerY,
+          speedX: Math.cos(angle) * speed,
+          speedY: Math.sin(angle) * speed,
+          life: 40 + Math.random() * 18,
+          color: palette[Math.floor(Math.random() * palette.length)]
+        });
+      }
+    }
+
+    function animateCelebrationFx(now) {
+      const fx = state.celebrationFx;
+      if (!fx.running) return;
+
+      const ctx = fx.ctx;
+      const width = dom.celebrationCanvas.width;
+      const height = dom.celebrationCanvas.height;
+      ctx.clearRect(0, 0, width, height);
+
+      if (now - fx.lastBurstAt > 760) {
+        spawnFirework();
+        fx.lastBurstAt = now;
+      }
+
+      fx.confetti.forEach((piece) => {
+        piece.x += piece.speedX;
+        piece.y += piece.speedY;
+        piece.angle += piece.spin;
+
+        if (piece.y > height + 20) {
+          Object.assign(piece, createConfettiPiece(), { y: -20 });
+        }
+
+        ctx.save();
+        ctx.translate(piece.x, piece.y);
+        ctx.rotate(piece.angle);
+        ctx.fillStyle = piece.color;
+        ctx.fillRect(-piece.w / 2, -piece.h / 2, piece.w, piece.h);
+        ctx.restore();
+      });
+
+      fx.fireworks = fx.fireworks.filter((spark) => spark.life > 0);
+      fx.fireworks.forEach((spark) => {
+        spark.x += spark.speedX;
+        spark.y += spark.speedY;
+        spark.speedY += 0.03;
+        spark.life -= 1;
+
+        ctx.beginPath();
+        ctx.fillStyle = spark.color;
+        ctx.globalAlpha = Math.max(0, spark.life / 60);
+        ctx.shadowBlur = 18;
+        ctx.shadowColor = spark.color;
+        ctx.arc(spark.x, spark.y, 2.2, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      ctx.globalAlpha = 1;
+      ctx.shadowBlur = 0;
+      fx.raf = requestAnimationFrame(animateCelebrationFx);
+    }
+
+    function resizeCanvases() {
+      dom.bgCanvas.width = window.innerWidth;
+      dom.bgCanvas.height = window.innerHeight;
+      dom.celebrationCanvas.width = window.innerWidth;
+      dom.celebrationCanvas.height = window.innerHeight;
+    }
+
+    // Question bank generation. This produces 126 offline questions across 9 required topics.
+    function buildQuestionBank() {
+      const bank = [];
+      let idCounter = 1;
+
+      function addQuestion(topic, prompt, options, correctAnswer, mode, level) {
+        const shuffled = shuffleArray([...options]);
+        bank.push({
+          id: `q-${idCounter++}`,
+          topic,
+          prompt,
+          options: shuffled,
+          correctIndex: shuffled.indexOf(correctAnswer),
+          mode,
+          level
+        });
+      }
+
+      const irregular = [
+        ["RUN", "ran", ["ran", "runned", "running", "run"]],
+        ["GO", "went", ["went", "goed", "gone", "goes"]],
+        ["EAT", "ate", ["ate", "eated", "eaten", "eats"]],
+        ["SEE", "saw", ["saw", "seed", "seen", "sees"]],
+        ["TAKE", "took", ["took", "tooked", "take", "taken"]],
+        ["WRITE", "wrote", ["wrote", "written", "writed", "writes"]],
+        ["FLY", "flew", ["flew", "flied", "flown", "flies"]],
+        ["DRINK", "drank", ["drank", "drunk", "drinked", "drinks"]],
+        ["SPEAK", "spoke", ["spoke", "speaked", "spoken", "speaks"]],
+        ["BUY", "bought", ["bought", "buyed", "brought", "buys"]],
+        ["BRING", "brought", ["brought", "bringed", "brang", "brings"]],
+        ["SWIM", "swam", ["swam", "swimmed", "swum", "swims"]],
+        ["TEACH", "taught", ["taught", "teached", "thought", "teaches"]],
+        ["HAVE", "had", ["had", "haved", "has", "having"]]
+      ];
+      irregular.forEach(([verb, correct, options], index) => {
+        addQuestion("Irregular Verbs", `What is the past simple of ${verb}?`, options, correct, "Multiple Choice", index < 8 ? 1 : 2);
+      });
+
+      const toBe = [
+        ["Choose the correct form: She ___ happy yesterday.", ["is", "was", "were", "be"], "was", 1],
+        ["Choose the correct form: They ___ at school now.", ["was", "am", "are", "were"], "are", 1],
+        ["Choose the correct form: I ___ tired last night.", ["was", "am", "are", "is"], "was", 1],
+        ["Choose the correct form: We ___ in the park yesterday.", ["is", "was", "were", "are"], "were", 1],
+        ["Choose the correct form: He ___ my teacher now.", ["are", "is", "was", "were"], "is", 1],
+        ["Choose the correct form: You ___ late this morning.", ["is", "was", "were", "am"], "were", 1],
+        ["Choose the correct form: The book ___ on the desk now.", ["is", "are", "was", "were"], "is", 1],
+        ["Choose the correct form: My parents ___ very busy yesterday.", ["was", "is", "were", "am"], "were", 1],
+        ["Choose the correct form: I ___ at home now.", ["am", "was", "is", "were"], "am", 1],
+        ["Choose the correct form: It ___ cold last week.", ["is", "was", "are", "am"], "was", 1],
+        ["Choose the correct form: The children ___ noisy now.", ["is", "was", "are", "am"], "are", 2],
+        ["Choose the correct form: She and I ___ friends last year.", ["was", "is", "were", "am"], "were", 2],
+        ["Choose the correct form: The movie ___ interesting yesterday.", ["were", "is", "was", "are"], "was", 2],
+        ["Choose the correct form: You ___ my best friend.", ["am", "are", "was", "were"], "are", 2]
+      ];
+      toBe.forEach(([prompt, options, correct, level]) => addQuestion("Verb To Be", prompt, options, correct, "Fill In The Blank", level));
+
+      const presentContinuous = [
+        ["Complete: They are ___ (walk).", ["walk", "walks", "walking", "walked"], "walking", 1],
+        ["Complete: I am ___ TV now.", ["watch", "watched", "watching", "watches"], "watching", 1],
+        ["Complete: She is ___ dinner.", ["cook", "cooks", "cooking", "cooked"], "cooking", 1],
+        ["Complete: We are ___ for the bus.", ["wait", "waiting", "waited", "waits"], "waiting", 1],
+        ["Complete: He is ___ his homework.", ["do", "doing", "does", "did"], "doing", 1],
+        ["Complete: The baby is ___.", ["sleep", "slept", "sleeping", "sleeps"], "sleeping", 1],
+        ["Complete: They are ___ soccer.", ["play", "playing", "played", "plays"], "playing", 1],
+        ["Complete: I am ___ a book.", ["read", "reading", "reads", "reader"], "reading", 1],
+        ["Complete: It is ___ outside.", ["rain", "raining", "rains", "rained"], "raining", 2],
+        ["Complete: You are ___ too fast.", ["run", "running", "ran", "runs"], "running", 2],
+        ["Complete: My friends are ___ music.", ["listen", "listening to", "heard", "hearing"], "listening to", 2],
+        ["Complete: The dog is ___ in the garden.", ["play", "playing", "played", "plays"], "playing", 2],
+        ["Complete: She is ___ an email.", ["write", "wrote", "writing", "written"], "writing", 2],
+        ["Complete: We are ___ breakfast.", ["have", "having", "had", "has"], "having", 2]
+      ];
+      presentContinuous.forEach(([prompt, options, correct, level]) => addQuestion("Present Continuous", prompt, options, correct, "Fill In The Blank", level));
+
+      const canCant = [
+        ["Choose the correct sentence.", ["She can sings.", "She can sing.", "She cans sing.", "She can to sing."], "She can sing.", 1],
+        ["Complete: I ___ swim very well.", ["can", "can't", "am", "is"], "can", 1],
+        ["Complete: He ___ drive a car. He is only 10.", ["can", "can't", "does", "is"], "can't", 1],
+        ["Choose the correct sentence.", ["They can play chess.", "They can plays chess.", "They can playing chess.", "They can to play chess."], "They can play chess.", 1],
+        ["Complete: We ___ hear you. Speak louder.", ["can", "can't", "are", "do"], "can't", 2],
+        ["Choose the correct sentence.", ["Can she dance?", "Can she dances?", "Does she can dance?", "She can dance?"], "Can she dance?", 2],
+        ["Complete: My brother ___ cook pasta.", ["can't", "can", "is", "are"], "can", 1],
+        ["Choose the correct sentence.", ["I can't understand.", "I don't can understand.", "I can't understands.", "I am can't understand."], "I can't understand.", 2],
+        ["Complete: ___ you help me?", ["Do", "Can", "Are", "Is"], "Can", 1],
+        ["Complete: Birds ___ fly.", ["can't", "can", "are", "do"], "can", 1],
+        ["Choose the correct sentence.", ["He can not speaks French.", "He can't speak French.", "He can't to speak French.", "He doesn't can speak French."], "He can't speak French.", 2],
+        ["Complete: We ___ come tomorrow.", ["can", "can't", "are", "were"], "can", 1],
+        ["Complete: She ___ lift that box. It is too heavy.", ["can", "can't", "does", "did"], "can't", 2],
+        ["Choose the correct sentence.", ["Can they come with us?", "Do they can come with us?", "They can come with us?", "Can they comes with us?"], "Can they come with us?", 2]
+      ];
+      canCant.forEach(([prompt, options, correct, level]) => {
+        const mode = prompt.startsWith("Choose") ? "Multiple Choice" : "Fill In The Blank";
+        addQuestion("Can / Can't", prompt, options, correct, mode, level);
+      });
+
+      const compSup = [
+        ["Choose the comparative form of BIG.", ["biger", "more big", "bigger", "biggest"], "bigger", 1],
+        ["Choose the superlative form of SMALL.", ["smaller", "smallest", "most small", "smaller than"], "smallest", 1],
+        ["Which sentence is correct?", ["My car is fast than yours.", "My car is faster than yours.", "My car is more fast than yours.", "My car faster yours."], "My car is faster than yours.", 2],
+        ["Choose the comparative form of HAPPY.", ["happier", "more happy", "happyer", "happiest"], "happier", 1],
+        ["Choose the superlative form of GOOD.", ["goodest", "better", "best", "most good"], "best", 2],
+        ["Which sentence is correct?", ["This is the most tall building.", "This is the tallest building.", "This is the taller building.", "This is tall building."], "This is the tallest building.", 2],
+        ["Choose the comparative form of BEAUTIFUL.", ["beautifuler", "more beautiful", "most beautiful", "beautifuller"], "more beautiful", 2],
+        ["Choose the superlative form of BAD.", ["worse", "worst", "baddest", "most bad"], "worst", 2],
+        ["Which sentence is correct?", ["Today is hotter than yesterday.", "Today is more hot than yesterday.", "Today is hottest than yesterday.", "Today hotter yesterday."], "Today is hotter than yesterday.", 2],
+        ["Choose the superlative form of EASY.", ["more easy", "easyest", "easiest", "easier"], "easiest", 2],
+        ["Choose the comparative form of FAR.", ["farther", "farest", "more far", "farthest"], "farther", 3],
+        ["Which sentence is correct?", ["She is the smartest student.", "She is the smarter student.", "She is smartest student.", "She is the most smart student."], "She is the smartest student.", 3],
+        ["Choose the superlative form of INTERESTING.", ["interestinger", "more interesting", "most interesting", "interestings"], "most interesting", 3],
+        ["Choose the comparative form of THIN.", ["thiner", "thinner", "more thin", "thinnest"], "thinner", 2]
+      ];
+      compSup.forEach(([prompt, options, correct, level]) => addQuestion("Comparatives and Superlatives", prompt, options, correct, "Multiple Choice", level));
+
+      const thereIsAre = [
+        ["Choose the correct sentence.", ["There is three cats.", "There are three cats.", "There be three cats.", "There am three cats."], "There are three cats.", 1],
+        ["Complete: ___ a book on the table.", ["There are", "There is", "There be", "There were"], "There is", 1],
+        ["Complete: ___ many students in the classroom.", ["There is", "There are", "There am", "There was"], "There are", 1],
+        ["Choose the correct sentence.", ["There are a car outside.", "There is a car outside.", "There be a car outside.", "There were a car outside."], "There is a car outside.", 1],
+        ["Complete: ___ some milk in the fridge.", ["There are", "There is", "There be", "There were"], "There is", 2],
+        ["Complete: ___ two bathrooms in my house.", ["There is", "There are", "There am", "There was"], "There are", 1],
+        ["Choose the correct sentence.", ["There is five pencils.", "There are five pencils.", "There were five pencils now.", "There am five pencils."], "There are five pencils.", 1],
+        ["Complete: ___ an apple and two bananas.", ["There are", "There is", "There am", "There were"], "There is", 2],
+        ["Complete: ___ a lot of chairs in the hall.", ["There is", "There are", "There was", "There am"], "There are", 2],
+        ["Choose the correct sentence.", ["There is a dog in the yard.", "There are a dog in the yard.", "There dog is in the yard.", "There be a dog in the yard."], "There is a dog in the yard.", 1],
+        ["Complete: ___ no sugar left.", ["There are", "There is", "There were", "There am"], "There is", 2],
+        ["Complete: ___ four windows in this room.", ["There is", "There are", "There was", "There am"], "There are", 1],
+        ["Choose the correct sentence.", ["There are a teacher in the room.", "There is a teacher in the room.", "There teacher is in the room.", "There be teacher in the room."], "There is a teacher in the room.", 2],
+        ["Complete: ___ many reasons to study English.", ["There is", "There are", "There am", "There be"], "There are", 2]
+      ];
+      thereIsAre.forEach(([prompt, options, correct, level]) => {
+        const mode = prompt.startsWith("Choose") ? "Multiple Choice" : "Fill In The Blank";
+        addQuestion("There is / There are", prompt, options, correct, mode, level);
+      });
+
+      const whQuestions = [
+        ["Choose the correct WH-word: ___ is your best friend?", ["Where", "Who", "When", "Why"], "Who", 1],
+        ["Choose the correct WH-word: ___ do you live?", ["Who", "How", "Where", "Which"], "Where", 1],
+        ["Choose the correct WH-word: ___ are you sad?", ["Why", "When", "Where", "How many"], "Why", 1],
+        ["Choose the correct WH-word: ___ does school start?", ["Who", "When", "How much", "What color"], "When", 1],
+        ["Choose the correct WH-word: ___ old are you?", ["Who", "Why", "How", "Where"], "How", 1],
+        ["Choose the correct WH-word: ___ is your birthday?", ["When", "Why", "Who", "Which"], "When", 1],
+        ["Choose the correct WH-word: ___ is that girl?", ["Who", "Where", "How many", "When"], "Who", 1],
+        ["Choose the correct WH-word: ___ do you go to school?", ["What", "How", "When", "Whose"], "How", 2],
+        ["Choose the correct WH-word: ___ is your bag, the blue one or the red one?", ["Who", "Which", "Where", "Why"], "Which", 2],
+        ["Choose the correct WH-word: ___ are my keys?", ["Where", "Who", "When", "How"], "Where", 1],
+        ["Choose the correct WH-word: ___ do you study English?", ["What", "Why", "Where", "Who"], "Why", 2],
+        ["Choose the correct WH-word: ___ is your favorite subject?", ["What", "When", "Who", "How"], "What", 1],
+        ["Choose the correct WH-word: ___ many brothers do you have?", ["Who", "What", "How", "Which"], "How", 2],
+        ["Choose the correct WH-word: ___ do you usually eat for breakfast?", ["What", "Where", "Who", "Why"], "What", 1]
+      ];
+      whQuestions.forEach(([prompt, options, correct, level]) => addQuestion("WH Questions", prompt, options, correct, "Fill In The Blank", level));
+
+      const forSince = [
+        ["Choose FOR or SINCE: I have lived here ___ 2019.", ["for", "since", "from", "during"], "since", 2],
+        ["Choose FOR or SINCE: She has studied English ___ three years.", ["for", "since", "at", "by"], "for", 2],
+        ["Choose FOR or SINCE: We have waited ___ two hours.", ["since", "for", "from", "in"], "for", 2],
+        ["Choose FOR or SINCE: He has been sick ___ Monday.", ["for", "since", "at", "during"], "since", 2],
+        ["Choose FOR or SINCE: They have worked together ___ a long time.", ["since", "for", "from", "to"], "for", 2],
+        ["Choose FOR or SINCE: I have known her ___ childhood.", ["for", "since", "at", "on"], "since", 3],
+        ["Choose FOR or SINCE: My dad has had this car ___ ten years.", ["for", "since", "from", "by"], "for", 2],
+        ["Choose FOR or SINCE: We have been friends ___ 2020.", ["for", "since", "during", "by"], "since", 2],
+        ["Choose FOR or SINCE: She has practiced piano ___ five months.", ["since", "for", "by", "at"], "for", 2],
+        ["Choose FOR or SINCE: I have felt better ___ yesterday.", ["for", "since", "from", "during"], "since", 2],
+        ["Choose FOR or SINCE: He has taught math ___ many years.", ["for", "since", "on", "at"], "for", 3],
+        ["Choose FOR or SINCE: They have been on vacation ___ last Friday.", ["for", "since", "to", "from"], "since", 3],
+        ["Choose FOR or SINCE: We have used this room ___ a decade.", ["since", "for", "during", "at"], "for", 3],
+        ["Choose FOR or SINCE: The shop has been open ___ 8 a.m.", ["for", "since", "from", "during"], "since", 2]
+      ];
+      forSince.forEach(([prompt, options, correct, level]) => addQuestion("For / Since", prompt, options, correct, "Fill In The Blank", level));
+
+      const howMuchMany = [
+        ["Choose the correct question: ___ apples are there?", ["How much", "How many", "How old", "How long"], "How many", 1],
+        ["Choose the correct question: ___ milk do you need?", ["How many", "How much", "How far", "How often"], "How much", 1],
+        ["Choose the correct question: ___ books do you have?", ["How much", "How many", "How", "How big"], "How many", 1],
+        ["Choose the correct question: ___ sugar is in the bowl?", ["How many", "How much", "How", "How old"], "How much", 1],
+        ["Choose the correct question: ___ chairs are in the room?", ["How much", "How many", "How often", "How long"], "How many", 1],
+        ["Choose the correct question: ___ water is left?", ["How many", "How much", "How old", "How far"], "How much", 1],
+        ["Choose the correct question: ___ money do you have?", ["How many", "How much", "How tall", "How"], "How much", 2],
+        ["Choose the correct question: ___ eggs do we need?", ["How much", "How many", "How", "How long"], "How many", 1],
+        ["Choose the correct question: ___ rice do you eat?", ["How many", "How much", "How often", "How far"], "How much", 2],
+        ["Choose the correct question: ___ students are absent today?", ["How much", "How many", "How", "How big"], "How many", 1],
+        ["Choose the correct question: ___ bread is there?", ["How many", "How much", "How old", "How long"], "How much", 2],
+        ["Choose the correct question: ___ bananas can you buy?", ["How much", "How many", "How", "How tall"], "How many", 1],
+        ["Choose the correct question: ___ juice is in the bottle?", ["How many", "How much", "How long", "How far"], "How much", 2],
+        ["Choose the correct question: ___ notebooks are on your desk?", ["How much", "How many", "How", "How often"], "How many", 1]
+      ];
+      howMuchMany.forEach(([prompt, options, correct, level]) => addQuestion("How much / How many", prompt, options, correct, "Multiple Choice", level));
+
+      return bank;
+    }
+
+    init();
+  </script>
+</body>
+</html>
